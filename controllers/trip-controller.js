@@ -1,14 +1,8 @@
-const { Trip } = require('../models')
+const tripServices = require('../services/trip-services')
 
 const tripController = {
   getTrips: (req, res, next) => {
-    Trip.findAll({
-      raw: true
-    })
-      .then(trips => {
-        res.render('trips', { trips })
-      })
-      .catch(err => next(err))
+    tripServices.getTrips(req, (err, data) => err ? next(err) : res.render('trips', data))
   }
 }
 
