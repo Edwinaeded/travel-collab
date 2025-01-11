@@ -1,5 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const { create } = require('express-handlebars')
+const flash = require('connect-flash')
+const session = require('express-session')
 const handlebarsHelpers = require('./helpers/handlebars-helpers')
 const router = require('./routes')
 
@@ -12,6 +15,14 @@ app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
 app.set('views', './views')
 app.use(express.static('public'))
+app.use(flash())
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }))
+
+app.use((req, res, next) => {
+  res.locals.success_messages = req.flash('success_msg')
+  res.locals.error_messages = req.flash('error_msg')
+  next()
+})
 
 app.use(router)
 

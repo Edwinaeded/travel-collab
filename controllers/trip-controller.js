@@ -1,17 +1,14 @@
 const { Trip } = require('../models')
 
 const tripController = {
-  getTrips: (req, res) => {
+  getTrips: (req, res, next) => {
     Trip.findAll({
       raw: true
     })
       .then(trips => {
         res.render('trips', { trips })
       })
-      .catch(err => {
-        console.log(err)
-        res.redirect('/trips')
-      })
+      .catch(err => next(err))
   }
 }
 
