@@ -1,0 +1,16 @@
+<div class="container d-flex" style="margin-top: 10px;">
+  <!-- 左側圖片區 -->
+  <div class="flex-shrink-0" style="flex-basis: 35%; max-width: 40%; margin-right: 25px; margin-top: 50px;">
+    <img src="/images/trip-image.svg" alt="Banner" style="width: 100%; object-fit: cover;">
+  </div>
+
+  <!-- 右側表格卡片區 -->
+  <div class="card flex-grow-1">
+    <div style="margin-top: 10px; font-size: 18px; font-weight: 200;">▌Create Your Trip</div>
+    <div class="card-body">
+      <form>
+        {{> trip-form}}
+      </form>
+    </div>
+  </div>
+</div>
