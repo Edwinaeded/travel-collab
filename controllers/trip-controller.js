@@ -10,6 +10,14 @@ const tripController = {
     } catch (err) {
       next(err)
     }
+  },
+  postTrip: (req, res, next) => {
+    tripServices.postTrip(req, (err, data) => {
+      if (err) return next(err)
+      console.log(data)
+      req.flash('success_msg', `Trip[${data.name}] has been created successfully!`)
+      return res.redirect('/trips')
+    })
   }
 }
 

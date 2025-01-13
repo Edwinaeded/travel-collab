@@ -5,6 +5,7 @@ const tripController = require('../controllers/trip-controller')
 
 router.get('/trips/create', tripController.createTrip)
 router.get('/trips', tripController.getTrips)
+router.post('/trips', tripController.postTrip)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {

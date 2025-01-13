@@ -10,7 +10,7 @@
         <div style="color: #8a817c; font-size: 15px; font-weight: 200;">{{this.name}}</div>
       </div>
       <div class="card-body" style="height: 80%;">
-        <img class="card-img-top img-fluid" src="{{this.image}}" alt="Card image cap" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+        <img class="card-img-top img-fluid" src="{{#if this.image}}{{this.image}}{{else}}/images/trip-fallback-image.svg{{/if}}" alt="Card image cap" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
         <div class="badge bg-dark mt-2 mb-2 text-light" style="font-size: 10px;">{{formatDate this.startDate}}-{{formatDate this.endDate}}</div>
         <p class="card-text" style="font-size: 12px;">{{this.description}}</p>
         <a href="#" class="btn" style="background-color: #D4A373; color: white; font-size: 12px;">Edit</a>
