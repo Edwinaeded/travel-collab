@@ -8,7 +8,7 @@
   <div class="card flex-grow-1">
     <div style="margin-top: 10px; font-size: 18px; font-weight: 200;">▌Create Your Trip</div>
     <div class="card-body">
-      <form action="/trips" method="POST">
+      <form action="/trips" method="POST" enctype="multipart/form-data">
         {{> trip-form}}
       </form>
     </div>
