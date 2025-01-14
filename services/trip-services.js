@@ -30,6 +30,39 @@ const tripServices = {
       })
       .then(newTrip => callback(null, { newTrip, name }))
       .catch(err => callback(err))
+  },
+  editTrip: (req, callback) => {
+    const { id } = req.params
+    Trip.findOne({ where: { id }, raw: true })
+      .then(trip => {
+        if (!trip) throw new Error("The trip doesn't exist!")
+
+        callback(null, { trip })
+      })
+      .catch(err => callback(err))
+  },
+  putTrip: (req, callback) => {
+    const { id } = req.params
+    const { name, startDate, endDate, description } = req.body
+    const { file } = req
+    if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
+
+    Promise.all([
+      localFileHandler(file),
+      Trip.findByPk(id)
+    ])
+      .then(([filePath, trip]) => {
+        if (!trip) throw new Error("The trip doesn't exists!")
+        return trip.update({
+          name,
+          startDate,
+          endDate,
+          description,
+          image: filePath || trip.image
+        })
+      })
+      .then(trip => callback(null, { trip }))
+      .catch(err => callback(err))
   }
 }
 

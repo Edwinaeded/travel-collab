@@ -1,20 +1,28 @@
   <div class="form-floating mb-3">
-    <input type="text" class="form-control" id="name" name="name" placeholder="日本東京之旅" required>
+    <input type="text" class="form-control" id="name" name="name" placeholder="日本東京之旅" value="{{trip.name}}" required>
     <label for="name" style="font-size: 15px;">Trip Name</label>
   </div>
   <div class="form-floating mb-3">
-    <input type="date" class="form-control" id="startDate" name="startDate" placeholder="2025/1/1" required>
+    <input type="date" class="form-control" id="startDate" name="startDate" placeholder="2025/1/1" value="{{formatDateForInput trip.startDate}}" required>
     <label for="startDate" style="font-size: 15px;">Start Date</label>
   </div>
   <div class="form-floating mb-3">
-    <input type="date" class="form-control" id="endDate" name="endDate" placeholder="2025/1/2" required>
+    <input type="date" class="form-control" id="endDate" name="endDate" placeholder="2025/1/2" value="{{formatDateForInput trip.endDate}}" required>
     <label for="endDate" style="font-size: 15px;">End Date</label>
   </div>
   <div class="form-floating mb-3">
     <textarea class="form-control" id="description" name="description" style="height: 100px;"
-      placeholder="這趟一定好玩"></textarea>
+      placeholder="這趟一定好玩">{{trip.description}}</textarea>
     <label for="description" style="font-size: 15px;">Description</label>
   </div>
+  {{#if trip.image}}
+  <div class="mb-3" style="width: 50%;">
+    <img class="card-img-top img-fluid" src="{{trip.image}}"
+      alt="Card image cap"
+      style="width: 50%; height: 100px; object-fit: cover; border-radius: 4px; transition: opacity 0.5s; opacity:0;"
+      onload="this.style.opacity=1;">
+  </div>
+  {{/if}}
   <div class="input-group mb-3">
     <label class="input-group-text" for="image" style="font-size: 15px;">Image</label>
     <input type="file" class="form-control" id="image" name="image" placeholder="image">

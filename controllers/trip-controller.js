@@ -17,6 +17,16 @@ const tripController = {
       req.flash('success_msg', `[${data.name}] has been created successfully!`)
       return res.redirect('/trips')
     })
+  },
+  editTrip: (req, res, next) => {
+    tripServices.editTrip(req, (err, data) => err ? next(err) : res.render('edit-trip', data))
+  },
+  putTrip: (req, res, next) => {
+    tripServices.putTrip(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_msg', 'Trip has been updated successfully!')
+      return res.redirect('/trips')
+    })
   }
 }
 
