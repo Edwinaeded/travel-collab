@@ -15,8 +15,8 @@
         <p class="card-text" style="font-size: 12px;">{{this.description}}</p>
         <div class="d-flex justify-content-end">
           <a href="/trips/{{this.id}}/edit" class="btn" style="background-color: #ffd166; color: white; border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-pencil fa-sm"></i></a>
-          <form>
-            <button class="btn btn-outline-secondary" style="border-radius: 100px;"><i class="fa-solid fa-trash-can fa-sm"></i></button>
+          <form action="/trips/{{this.id}}?_method=DELETE" method="POST">
+            <button class="btn btn-outline-secondary" style="border-radius: 100px;" onclick="return confirm('Are you certain you want to delete [ {{this.name}} ] ?')"><i class="fa-solid fa-trash-can fa-sm"></i></button>
           </form>
         </div>
       </div>

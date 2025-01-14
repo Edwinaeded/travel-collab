@@ -3,11 +3,11 @@
     <label for="name" style="font-size: 15px;">Trip Name</label>
   </div>
   <div class="form-floating mb-3">
-    <input type="date" class="form-control" id="startDate" name="startDate" placeholder="2025/1/1" value="{{formatDateForInput trip.startDate}}" required>
+    <input type="date" class="form-control" id="startDate" name="startDate" placeholder="2025/1/1" value="{{#if trip.startDate}}{{formatDateForInput trip.startDate}}{{else}}{{/if}}" required>
     <label for="startDate" style="font-size: 15px;">Start Date</label>
   </div>
   <div class="form-floating mb-3">
-    <input type="date" class="form-control" id="endDate" name="endDate" placeholder="2025/1/2" value="{{formatDateForInput trip.endDate}}" required>
+    <input type="date" class="form-control" id="endDate" name="endDate" placeholder="2025/1/2" value="{{#if trip.endDate}}{{formatDateForInput trip.endDate}}{{else}}{{/if}}" required>
     <label for="endDate" style="font-size: 15px;">End Date</label>
   </div>
   <div class="form-floating mb-3">

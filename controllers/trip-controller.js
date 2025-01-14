@@ -14,7 +14,7 @@ const tripController = {
   postTrip: (req, res, next) => {
     tripServices.postTrip(req, (err, data) => {
       if (err) return next(err)
-      req.flash('success_msg', `[${data.name}] has been created successfully!`)
+      req.flash('success_msg', `[ ${data.name} ] has been created successfully!`)
       return res.redirect('/trips')
     })
   },
@@ -25,6 +25,13 @@ const tripController = {
     tripServices.putTrip(req, (err, data) => {
       if (err) return next(err)
       req.flash('success_msg', 'Trip has been updated successfully!')
+      return res.redirect('/trips')
+    })
+  },
+  deleteTrip: (req, res, next) => {
+    tripServices.deleteTrip(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_msg', 'Trip has been deleted successfully!')
       return res.redirect('/trips')
     })
   }

@@ -7,6 +7,7 @@ const upload = require('../middlewares/multer')
 router.get('/trips/create', tripController.createTrip)
 router.get('/trips/:id/edit', tripController.editTrip)
 router.put('/trips/:id', upload.single('image'), tripController.putTrip)
+router.delete('/trips/:id', tripController.deleteTrip)
 router.get('/trips', tripController.getTrips)
 router.post('/trips', upload.single('image'), tripController.postTrip)
 
