@@ -6,5 +6,8 @@ module.exports = {
   currentYear: () => dayjs().year(),
   formatDate: rawDate => dayjs(rawDate).format('YYYY/MM/DD'),
   formatDateForInput: rawDate => dayjs(rawDate).format('YYYY-MM-DD'),
-  relativeTimeFromNow: rawTime => dayjs(rawTime).fromNow()
+  relativeTimeFromNow: rawTime => dayjs(rawTime).fromNow(),
+  ifCond: function (a, b, options) {
+    return a === b ? options.fn(this) : options.inverse(this)
+  }
 }

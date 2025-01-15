@@ -1,5 +1,5 @@
 <h3>TRIP LIST</h3>
-<a href="/trips/create" class="btn btn-lg" style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i class="fa-solid fa-circle-plus"></i> </a>
+<a href="/trips/create" class="btn btn-lg" style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i class="fa-solid fa-circle-plus"></i></a>
 {{>messages}}
 <!-- 旅程卡片區 -->
 <div class="row mt-3">
@@ -12,7 +12,7 @@
       <div class="card-body" style="height: 80%;">
         <img class="card-img-top img-fluid" src="{{#if this.image}}{{this.image}}{{else}}/images/trip-fallback-image.svg{{/if}}" alt="Card image cap" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
         <div class="badge bg-dark mt-2 mb-2 text-light" style="font-size: 12px; font-weight: 300;">{{formatDate this.startDate}}-{{formatDate this.endDate}}</div>
-        <p class="card-text" style="font-size: 12px;">{{this.description}}</p>
+        <p class="card-text" style="font-size: 12px; min-height: 55px;">{{this.description}}</p>
         <div class="d-flex justify-content-end">
           <a href="/trips/{{this.id}}/edit" class="btn" style="background-color: #ffd166; color: white; border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-pencil fa-sm"></i></a>
           <form action="/trips/{{this.id}}?_method=DELETE" method="POST">
@@ -27,3 +27,26 @@
   </div>
   {{/each}}
 </div>
+
+<!-- 分頁器 -->
+<nav class="d-flex mt-3 justify-content-center" aria-label="pagination">
+  <ul class="pagination">
+    <li class="page-item {{#ifCond currentPage 1}}disabled{{else}}{{/ifCond}}">
+      <a class="page-link" href="/trips?page={{previousPage}}" aria-label="Previous">
+        <span aria-hidden="true"><i class="fa-solid fa-caret-left fa-lg"></i></span>
+      </a>
+    </li>
+    {{#each pages}}
+      {{#ifCond this ../currentPage}}
+    <li class="page-item active"><a class="page-link" href="#">{{this}}</a></li>
+      {{else}}
+    <li class="page-item"><a class="page-link" href="/trips?page={{this}}">{{this}}</a></li>
+      {{/ifCond}}
+    {{/each}}
+    <li class="page-item {{#ifCond currentPage totalPage}}disabled{{else}}{{/ifCond}}">
+      <a class="page-link" href="/trips?page={{nextPage}}" aria-label="Next">
+        <span aria-hidden="true"><i class="fa-solid fa-caret-right fa-lg"></i></span>
+      </a>
+    </li>
+  </ul>
+</nav>
