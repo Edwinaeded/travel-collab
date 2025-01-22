@@ -34,6 +34,9 @@ const tripController = {
       req.flash('success_msg', 'Trip has been deleted successfully!')
       return res.redirect('/trips')
     })
+  },
+  getTrip: (req, res, next) => {
+    return res.render('trip')
   }
 }
 

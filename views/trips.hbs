@@ -1,8 +1,13 @@
-<h3>TRIP LIST</h3>
-<a href="/trips/create" class="btn btn-lg" style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i class="fa-solid fa-circle-plus"></i></a>
+<div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+  <div style="display: inline-block; font-size: 25px; font-weight: 700;">TRIP LIST</div>
+  <a href="/trips/create" class="btn btn-lg"
+    style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i
+      class="fa-solid fa-circle-plus"></i></a>
+</div>
 {{>messages}}
+
 <!-- 旅程卡片區 -->
-<div class="row mt-3">
+<div class="row">
   {{#each trips}}
   <div class="col-md-3 mt-3">
     <div class="card text-left">
@@ -14,7 +19,9 @@
         <div class="badge bg-dark mt-2 mb-2 text-light" style="font-size: 12px; font-weight: 300;">{{formatDate this.startDate}}-{{formatDate this.endDate}}</div>
         <p class="card-text" style="font-size: 12px; min-height: 55px;">{{this.description}}</p>
         <div class="d-flex justify-content-end">
-          <a href="/trips/{{this.id}}/edit" class="btn" style="background-color: #ffd166; color: white; border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-pencil fa-sm"></i></a>
+          <a href="/trips/{{this.id}}" class="btn"
+            style="background-color: #ffd166; color: white; border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-suitcase-rolling"></i></a>
+          <a href="/trips/{{this.id}}/edit" class="btn btn-outline-primary" style="border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-pencil fa-sm"></i></a>
           <form action="/trips/{{this.id}}?_method=DELETE" method="POST">
             <button class="btn btn-outline-secondary" style="border-radius: 100px;" onclick="return confirm('Are you certain you want to delete [ {{this.name}} ] ?')"><i class="fa-solid fa-trash-can fa-sm"></i></button>
           </form>
