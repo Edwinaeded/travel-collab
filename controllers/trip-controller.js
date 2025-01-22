@@ -36,7 +36,10 @@ const tripController = {
     })
   },
   getTrip: (req, res, next) => {
-    return res.render('trip')
+    tripServices.getTrip(req, (err, data) => {
+      if (err) return next(err)
+      return res.render('trip', data)
+    })
   }
 }
 

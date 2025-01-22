@@ -87,6 +87,15 @@ const tripServices = {
       })
       .then(deletedTrip => callback(null, { deletedTrip }))
       .catch(err => callback(err))
+  },
+  getTrip: (req, callback) => {
+    const { id } = req.params
+    Trip.findByPk(id, { raw: true })
+      .then(trip => {
+        if (!trip) throw new Error("The trip does't exists!")
+        return callback(null, { trip })
+      })
+      .catch(err => callback(err))
   }
 }
 
