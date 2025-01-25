@@ -1,6 +1,7 @@
 const { Trip } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 const { getPagination } = require('../helpers/pagination-helpers')
+const { dayInterval } = require('../helpers/dayjs-helper')
 
 const tripServices = {
   getTrips: (req, callback) => {
@@ -93,7 +94,11 @@ const tripServices = {
     Trip.findByPk(id, { raw: true })
       .then(trip => {
         if (!trip) throw new Error("The trip does't exists!")
-        return callback(null, { trip })
+        const dayCount = dayInterval(trip.startDate, trip.endDate)
+        const days = Array.from({ length: dayCount }, (v, i) => i + 1)
+        const currentDay = Number(req.query.day) || 1
+
+        return callback(null, { trip, days, currentDay })
       })
       .catch(err => callback(err))
   }

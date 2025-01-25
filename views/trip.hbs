@@ -7,18 +7,11 @@
 
 <div class="container">
   <ul class="nav nav-tabs" style="width: 85%; margin: auto;">
+    {{#each days}}
     <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="#">Day 1</a>
+      <a class="nav-link {{#ifCond ../currentDay this}}active{{/ifCond}}" aria-current="page" href="/trips/{{../trip.id}}?day={{this}}">Day {{this}}</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Day 2</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Day 3</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link">Day 4</a>
-    </li>
+    {{/each}}
   </ul>
 </div>
 
