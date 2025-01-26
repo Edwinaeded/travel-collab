@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Destination.init({
+    tripId: DataTypes.INTEGER,
     name: DataTypes.STRING,
     description: DataTypes.TEXT,
     date: DataTypes.DATE,
