@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { generalErrorHandler } = require('../middlewares/error-handler')
 const tripController = require('../controllers/trip-controller')
+const destinationController = require('../controllers/destination-controller')
 const upload = require('../middlewares/multer')
 
 router.get('/trips/create', tripController.createTrip)
@@ -11,6 +12,8 @@ router.put('/trips/:id', upload.single('image'), tripController.putTrip)
 router.delete('/trips/:id', tripController.deleteTrip)
 router.get('/trips', tripController.getTrips)
 router.post('/trips', upload.single('image'), tripController.postTrip)
+
+router.get('/destinations/:id', destinationController.getDestination)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {
