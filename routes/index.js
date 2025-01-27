@@ -13,7 +13,9 @@ router.delete('/trips/:id', tripController.deleteTrip)
 router.get('/trips', tripController.getTrips)
 router.post('/trips', upload.single('image'), tripController.postTrip)
 
+router.get('/destinations/create', destinationController.createDestination)
 router.get('/destinations/:id', destinationController.getDestination)
+router.post('/destinations', upload.single('image'), destinationController.postDestination)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {

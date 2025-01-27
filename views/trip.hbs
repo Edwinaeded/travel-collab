@@ -1,9 +1,14 @@
 <div class="container mb-2" style="display: flex; justify-content: space-between; align-items: center;">
-  <div style="display: inline-block; font-size: 25px; font-weight: 700;">▌{{trip.name}}</div>
-  <a href="#" class="btn btn-lg"
+  <div style="display: flex; align-items: center; font-size: 25px; font-weight: 700;">▌{{trip.name}}
+    <div class="badge ms-2 text-light" style="font-size: 12px; font-weight: 300; background-color: #444444;">{{formatDate trip.startDate}}-{{formatDate trip.endDate}}</div>
+  </div>
+  <a id="add-button" href="/destinations/create?trip={{trip.id}}" class="btn btn-lg"
     style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i
       class="fa-solid fa-circle-plus"></i></a>
 </div>
+
+
+{{>messages}}
 
 <div class="container">
   <ul class="nav nav-tabs" style="width: 85%; margin: auto;">

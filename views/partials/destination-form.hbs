@@ -1,0 +1,49 @@
+<div class="form-container row mt-3">
+  <!-- 左側表格區 -->
+  <div class="col-md-5">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="name" name="name" placeholder="新宿原宿逛街" required>
+      <label for="name" style="font-size: 15px;">Destination Name</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="date" class="form-control" id="date" name="date" placeholder="3/15" required>
+      <label for="date" style="font-size: 15px;">Date</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="time" class="form-control" id="startTime" name="startTime" placeholder="08:20" required>
+      <label for="startTime" style="font-size: 15px;">Start Time</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="time" class="form-control" id="endTime" name="endTime" placeholder="09:20" required>
+      <label for="endTime" style="font-size: 15px;">End time</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="cost" name="cost" placeholder="300yen">
+      <label for="cost" style="font-size: 15px;">Estimated cost</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="address" name="address" placeholder="新宿區歌舞伎町一丁目4番1號">
+      <label for="address" style="font-size: 15px;">Address</label>
+    </div>
+    <div class="input-group mb-3">
+      <label class="input-group-text" for="image" style="font-size: 15px;">Image</label>
+      <input type="file" class="form-control" id="image" name="image" placeholder="image">
+    </div>
+  </div>
+  <!-- 右側表格區 -->
+  <div class="col-md-7">
+    <div class="form-floating mb-3">
+      <textarea class="form-control" id="description" name="description" style="height: 280px;"
+        placeholder="這趟一定好玩"></textarea>
+      <label for="description" style="font-size: 15px;">Description / Memo :</label>
+    </div>
+    <input type="hidden" id="tripId" name="tripId" value="{{trip.id}}">
+    <div class="d-flex justify-content-end">
+      <button class="btn"
+        style="background-color: #0077b6; color: white; font-size: 15px; font-weight: 300; border-radius: 100px;"
+        type="submit">CREATE <i class="fa-solid fa-plane fa-rotate-by" style="--fa-rotate-angle: 340deg;"></i></button>
+      <a class="btn btn-outline-secondary" href="javascript:history.back()"
+        style="margin-left: 5px; border-radius: 100px;"><i class="fa-solid fa-right-from-bracket fa-rotate-180"></i></a>
+    </div>
+  </div>
+</div>
