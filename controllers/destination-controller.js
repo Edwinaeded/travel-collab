@@ -13,6 +13,13 @@ const destinationController = {
       req.flash('success_msg', `[ ${data.newDestination.name} ] has been created successfully!`)
       return res.redirect(`/trips/${data.tripId}`)
     })
+  },
+  deleteDestination: (req, res, next) => {
+    destinationServices.deleteDestination(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_msg', `[ ${data.deletedDestination.name} ] has been deleted successfully!`)
+      return res.redirect(`/trips/${data.deletedDestination.tripId}`)
+    })
   }
 }
 

@@ -49,6 +49,20 @@ const destinationServices = {
       })
       .then(newDestination => callback(null, { newDestination, tripId }))
       .catch(err => callback(err))
+  },
+  deleteDestination: (req, callback) => {
+    const { id } = req.params
+    Destination.findByPk(id)
+      .then(destination => {
+        if (!destination) throw new Error("The destination doesn't exist!")
+        const deletedData = destination.toJSON()
+        return destination.destroy()
+          .then(() => callback(null, { deletedDestination: deletedData }))
+          .catch(err => {
+            throw new Error(`Failed to delete destination: ${err.message}`)
+          })
+      })
+      .catch(err => callback(err))
   }
 }
 
