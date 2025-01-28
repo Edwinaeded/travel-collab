@@ -3,8 +3,17 @@ const { localFileHandler } = require('../helpers/file-helpers')
 const { dayInterval, timeToUtc } = require('../helpers/dayjs-helper')
 
 const destinationServices = {
+  getDestination: (req, callback) => {
+    const { id } = req.params
+    Destination.findByPk(id, { raw: true })
+      .then(destination => {
+        if (!destination) throw new Error("The destination doesn't exist!")
+
+        return callback(null, { destination })
+      })
+      .catch(err => callback(err))
+  },
   createDestination: (req, callback) => {
-    console.log(req.query.trip)
     const id = req.query.trip
     Trip.findByPk(id, { raw: true })
       .then(trip => {

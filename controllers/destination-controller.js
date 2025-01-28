@@ -1,8 +1,8 @@
 const destinationServices = require('../services/destination-services')
 
 const destinationController = {
-  getDestination: (req, res) => {
-    return res.render('destination')
+  getDestination: (req, res, next) => {
+    destinationServices.getDestination(req, (err, data) => err ? next(err) : res.render('destination', data))
   },
   createDestination: (req, res, next) => {
     destinationServices.createDestination(req, (err, data) => err ? next(err) : res.render('create-destination', data))

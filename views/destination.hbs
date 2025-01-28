@@ -1,5 +1,5 @@
 <div class="container d-flex justify-content-between">
-  <div style="font-size: 25px; font-weight: 700;">📍新宿原宿逛街</div>
+  <div style="font-size: 25px; font-weight: 700;">📍{{destination.name}}</div>
   <div>
     <a id="edit-button" href="#" class="btn btn-outline-primary" style="border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-pencil fa-sm"></i></a>
     <a class="btn btn-outline-secondary" href="javascript:history.back()" style="border-radius: 100px;"><i class="fa-solid fa-right-from-bracket fa-rotate-180"></i></a>
@@ -8,16 +8,16 @@
 
 <div class="container row mt-3">
   <div class="col-md-5">
-    <img src="/images/seed-photo/Japan-osaka.jpg" style="width: 80%;">
+    <img src="{{#if destination.image}}{{destination.image}}{{else}}/images/location-fallback-city.svg{{/if}}" style="width: 80%;">
     <ul class="mt-4">
-      <li><strong>Date :</strong> 5/19</li>
-      <li><strong>Duration :</strong> 8:20~9:20</li>
-      <li><strong>Cost :</strong> 100~300</li>
-      <li><strong>Address :</strong> 新宿區歌舞伎町一丁目4番1號</li>
+      <li><strong>Date :</strong> {{formatDate destination.date}}</li>
+      <li><strong>Duration :</strong> {{formatTime destination.startTime}} ~ {{formatTime destination.endTime}}</li>
+      <li><strong>Cost :</strong> {{destination.cost}}</li>
+      <li><strong>Address :</strong> {{destination.address}}</li>
     </ul>
   </div>
   <div class="col-md-7">
     <div><strong>Description / Memo :</strong></div>
-    <div>好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩好玩</div>
+    <div>{{destination.description}}</div>
   </div>
 </div>
