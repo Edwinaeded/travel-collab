@@ -1,7 +1,7 @@
-const { Trip } = require('../models')
+const { Trip, Destination } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 const { getPagination } = require('../helpers/pagination-helpers')
-const { dayInterval } = require('../helpers/dayjs-helper')
+const { dayInterval, dayAdd } = require('../helpers/dayjs-helper')
 
 const tripServices = {
   getTrips: (req, callback) => {
@@ -67,7 +67,7 @@ const tripServices = {
       Trip.findByPk(id)
     ])
       .then(([filePath, trip]) => {
-        if (!trip) throw new Error("The trip doesn't exists!")
+        if (!trip) throw new Error("The trip doesn't exist!")
         return trip.update({
           name,
           startDate,
@@ -83,7 +83,7 @@ const tripServices = {
     const { id } = req.params
     Trip.findByPk(id)
       .then(trip => {
-        if (!trip) throw new Error("The trip doesn't exists!")
+        if (!trip) throw new Error("The trip doesn't exist!")
         return trip.destroy()
       })
       .then(deletedTrip => callback(null, { deletedTrip }))
@@ -91,14 +91,24 @@ const tripServices = {
   },
   getTrip: (req, callback) => {
     const { id } = req.params
+    const currentDay = Number(req.query.day) || 1
+
     Trip.findByPk(id, { raw: true })
       .then(trip => {
-        if (!trip) throw new Error("The trip does't exists!")
+        if (!trip) throw new Error("The trip doesn't exist!")
+        // tab天數顯示
         const dayCount = dayInterval(trip.startDate, trip.endDate)
         const days = Array.from({ length: dayCount }, (v, i) => i + 1)
-        const currentDay = Number(req.query.day) || 1
-
-        return callback(null, { trip, days, currentDay })
+        if (!days.includes(currentDay)) throw new Error("The chosen day doesn't exist!")
+        // 找出符合指定day的destination資料
+        Destination.findAll({
+          raw: true,
+          where: {
+            tripId: id,
+            date: dayAdd(trip.startDate, currentDay - 1).toJSON()
+          }
+        })
+          .then(destinations => callback(null, { trip, destinations, days, currentDay }))
       })
       .catch(err => callback(err))
   }

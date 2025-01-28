@@ -9,5 +9,8 @@ module.exports = {
   timeToUtc: date => {
     if (!date.includes('T')) return `${date}T00:00:00.000Z`
     return date
+  },
+  dayAdd: (date, addNum) => {
+    return dayjs(date).add(addNum, 'day')
   }
 }
