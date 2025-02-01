@@ -20,6 +20,16 @@ const destinationController = {
       req.flash('success_msg', `[ ${data.deletedDestination.name} ] has been deleted successfully!`)
       return res.redirect(`/trips/${data.deletedDestination.tripId}`)
     })
+  },
+  editDestination: (req, res, next) => {
+    destinationServices.editDestination(req, (err, data) => err ? next(err) : res.render('edit-destination', data))
+  },
+  putDestination: (req, res, next) => {
+    destinationServices.putDestination(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_msg', `[ ${data.updatedDestination.name} ] has been updated successfully!`)
+      return res.redirect(`/destinations/${data.updatedDestination.id}`)
+    })
   }
 }
 

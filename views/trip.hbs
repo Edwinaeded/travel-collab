@@ -2,9 +2,13 @@
   <div style="display: flex; align-items: center; font-size: 25px; font-weight: 700;">▌{{trip.name}}
     <div class="badge ms-2 text-light" style="font-size: 12px; font-weight: 300; background-color: #444444;">{{formatDate trip.startDate}}-{{formatDate trip.endDate}}</div>
   </div>
-  <a id="add-button" href="/destinations/create?trip={{trip.id}}" class="btn btn-lg"
-    style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i
-      class="fa-solid fa-circle-plus"></i></a>
+  <div>
+    <a id="add-button" href="/destinations/create?trip={{trip.id}}" class="btn btn-lg"
+      style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i
+        class="fa-solid fa-circle-plus"></i></a>
+    <a class="btn btn-outline-secondary" href="javascript:history.back()" style="margin-left: 5px; border-radius: 100px;"><i
+        class="fa-solid fa-right-from-bracket fa-rotate-180"></i></a>
+  </div>
 </div>
 
 
@@ -22,25 +26,35 @@
 
 
 <div class="container">
-  {{#each destinations}}
-  <div class="card mt-3" style="width: 70%; margin: auto;">
-    <div class="card-body row" style="align-items: center;">
-      <img class="col-md-3" src="{{#if this.image}}{{this.image}}{{else}}/images/location-fallback-city.svg{{/if}}" style="height: 70%; object-fit: cover;">
-      <div class="location-content col-md-2" style="margin: auto 20px;">
-        <div style="font-weight: 400; font-size: 15px;">{{formatTime this.startTime}} ~ {{formatTime this.endTime}}</div>
-        <div style="font-weight: 800; font-size: 20px;">{{this.name}}</div>
-      </div>
-      <div class="col-md-5" style="font-weight: 200; font-size: 15px;">
-        {{this.description}}
-      </div>
-      <div class="col-md-1">
-        <a id="detail-button" href="/destinations/{{this.id}}" class="btn" style="background-color: #ffd166; color: white; border-radius: 100px; margin-bottom: 5px;"><i class="fa-solid fa-suitcase-rolling"></i></a>
-        <form action="/destinations/{{this.id}}?_method=DELETE" method="POST">
-          <button class="btn btn-outline-secondary" style="border-radius: 100px;"><i
-              class="fa-solid fa-trash-can fa-sm" onclick="return confirm('Are you certain you want to delete [ {{this.name}} ] ?')"></i></button>
-        </form>
+  {{#if destinations}}
+    {{#each destinations}}
+    <div class="card mt-3" style="width: 70%; margin: auto;">
+      <div class="card-body row" style="align-items: center;">
+        <img class="col-md-3" src="{{#if this.image}}{{this.image}}{{else}}/images/location-fallback-city.svg{{/if}}"
+          style="height: 70%; object-fit: cover;">
+        <div class="location-content col-md-2" style="margin: auto 20px;">
+          <div style="font-weight: 400; font-size: 15px;">{{formatTime this.startTime}} ~ {{formatTime this.endTime}}</div>
+          <div style="font-weight: 800; font-size: 20px;">{{this.name}}</div>
+        </div>
+        <div class="col-md-5" style="font-weight: 200; font-size: 15px;">
+          {{this.description}}
+        </div>
+        <div class="col-md-1">
+          <a id="detail-button" href="/destinations/{{this.id}}" class="btn"
+            style="background-color: #ffd166; color: white; border-radius: 100px; margin-bottom: 5px;"><i
+              class="fa-solid fa-suitcase-rolling"></i></a>
+          <form action="/destinations/{{this.id}}?_method=DELETE" method="POST">
+            <button class="btn btn-outline-secondary" style="border-radius: 100px;"><i class="fa-solid fa-trash-can fa-sm"
+                onclick="return confirm('Are you certain you want to delete [ {{this.name}} ] ?')"></i></button>
+          </form>
+        </div>
       </div>
     </div>
+    {{/each}}
+  {{else}}
+  <div class="container d-flex content-justify-center">
+    <div class="mt-4" style="margin: auto; font-size: 20px; font-weight: 600;">尚未有內容，馬上開始旅程計畫吧～
+    </div>
   </div>
-  {{/each}}
+  {{/if}}
 </div>

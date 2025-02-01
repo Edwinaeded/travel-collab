@@ -58,10 +58,56 @@ const destinationServices = {
         const deletedData = destination.toJSON()
         return destination.destroy()
           .then(() => callback(null, { deletedDestination: deletedData }))
-          .catch(err => {
-            throw new Error(`Failed to delete destination: ${err.message}`)
-          })
+          .catch(err => callback(err))
       })
+      .catch(err => callback(err))
+  },
+  editDestination: (req, callback) => {
+    const { id } = req.params
+
+    Promise.all([
+      Destination.findByPk(id, { raw: true }),
+      Destination.findByPk(id, { raw: true }).then(destination => destination ? Trip.findByPk(destination.tripId, { raw: true }) : Promise.reject(new Error("The destination doesn't exist!")))
+    ])
+      .then(([destination, trip]) => {
+        if (!trip) throw new Error("The trip doesn't exist!")
+        return callback(null, { destination, trip })
+      })
+      .catch(err => callback(err))
+  },
+  putDestination: (req, callback) => {
+    const { id } = req.params
+    const { name, date, startTime, endTime, cost, address, description, tripId } = req.body
+    const { file } = req
+    if (!name || !date || !startTime || !endTime) throw new Error('Please complete all required fields')
+
+    Promise.all([
+      Destination.findByPk(id),
+      Trip.findByPk(tripId),
+      localFileHandler(file)
+    ])
+      .then(([destination, trip, filePath]) => {
+        if (!destination) throw new Error("The destination doesn't exist!")
+        if (!trip) throw new Error("The trip doesn't exist!")
+
+        // 確認時間在trip區間內
+        const tripDayCount = dayInterval(trip.startDate, trip.endDate)
+        const dayCount = dayInterval(trip.startDate, timeToUtc(date))
+        if (dayCount < 1 || dayCount > tripDayCount) throw new Error('Selected date exceeds the travel period!')
+
+        return destination.update({
+          name,
+          date,
+          startTime,
+          endTime,
+          cost,
+          address,
+          description,
+          tripId,
+          image: filePath || destination.image
+        })
+      })
+      .then(updatedDestination => callback(null, { updatedDestination: updatedDestination.toJSON() }))
       .catch(err => callback(err))
   }
 }
