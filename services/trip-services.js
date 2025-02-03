@@ -106,9 +106,16 @@ const tripServices = {
           where: {
             tripId: id,
             date: dayAdd(trip.startDate, currentDay - 1).toJSON()
-          }
+          },
+          order: [['startTime'], ['endTime']]
         })
-          .then(destinations => callback(null, { trip, destinations, days, currentDay }))
+          .then(destinations => {
+            const data = destinations.map(destination => ({
+              ...destination,
+              description: destination.description.substring(0, 180)
+            }))
+            callback(null, { trip, destinations: data, days, currentDay })
+          })
       })
       .catch(err => callback(err))
   }
