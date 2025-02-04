@@ -1,0 +1,22 @@
+<div class="card" style="width: 800px; margin: auto; padding: 10px 10px;">
+  <form class="form-editProfile" action="/users/{{ user.id }}?_method=PUT" method="POST" enctype="multipart/form-data">
+    <div class="form-row mb-3">
+      <label class="form-label" for="name">Name</label>
+      <input class="form-control" id="name" type="text" name="name" class="form-control" value="{{ user.name }}">
+    </div>
+    <div class="form-row mb-3">
+      <label class="form-label" for="image">Image</label>
+      <input class="form-control" id="image" type="file" name="image" class="form-control">
+    </div>
+    {{#if user.image}}
+    <div class="mb-3" style="width: 50%;">
+      <img class="card-img-top img-fluid" src="{{user.image}}" alt="Card image cap" style="width: 30%; height: 100px; object-fit: cover; border-radius: 4px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+    </div>
+    {{/if}}
+    <div class="d-flex justify-content-end">
+      <button  type="submit" class="btn" style="background-color: #ffd166; color: white; border-radius: 100px; margin-right: 5px;">Update ✎</button>
+      <a class="btn btn-outline-secondary" href="/users/{{user.id}}" style="margin-left: 5px; border-radius: 100px;"><i
+          class="fa-solid fa-right-from-bracket fa-rotate-180"></i></a>
+    </div>
+  </form>
+</div>
