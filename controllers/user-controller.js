@@ -13,6 +13,17 @@ const userController = {
   },
   getSignIn: (req, res) => {
     res.render('sign-in')
+  },
+  postSignIn: (req, res, next) => {
+    req.flash('success_msg', 'Sign-in successful!')
+    res.redirect('/trips')
+  },
+  postLogout: (req, res, next) => {
+    req.logout(err => {
+      if (err) return next(err)
+      req.flash('success_msg', 'Logout successful!')
+      res.redirect('/signin')
+    })
   }
 }
 

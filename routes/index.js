@@ -5,6 +5,7 @@ const tripController = require('../controllers/trip-controller')
 const destinationController = require('../controllers/destination-controller')
 const userController = require('../controllers/user-controller')
 const upload = require('../middlewares/multer')
+const passport = require('../middlewares/passport')
 
 router.get('/trips/create', tripController.createTrip)
 router.get('/trips/:id/edit', tripController.editTrip)
@@ -24,6 +25,11 @@ router.post('/destinations', upload.single('image'), destinationController.postD
 router.get('/signup', userController.getSignUp)
 router.post('/signup', userController.postSignUp)
 router.get('/signin', userController.getSignIn)
+router.post('/signin', passport.authenticate('local', {
+  failureRedirect: '/signin',
+  failureFlash: true
+}), userController.postSignIn)
+router.post('/logout', userController.postLogout)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {

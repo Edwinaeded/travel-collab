@@ -5,6 +5,6 @@ module.exports = {
     } else {
       req.flash('error_msg', `${err}`)
     }
-    res.redirect('/trips')
+    res.redirect('back')
   }
 }
