@@ -7,6 +7,7 @@
 {{>messages}}
 
 <!-- 旅程卡片區 -->
+{{#if trips.length}}
 <div class="row">
   {{#each trips}}
   <div class="col-md-3 mt-3">
@@ -34,6 +35,12 @@
   </div>
   {{/each}}
 </div>
+{{else}}
+<div class="container d-flex content-justify-center">
+  <div class="mt-4" style="height: 350px; margin: auto; font-size: 20px; font-weight: 600;">尚未有內容，馬上開始旅程計畫吧～
+  </div>
+</div>
+{{/if}}
 
 <!-- 分頁器 -->
 <nav class="d-flex mt-3 justify-content-center" aria-label="pagination">

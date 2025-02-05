@@ -2,14 +2,17 @@ const { Trip, Destination } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 const { getPagination } = require('../helpers/pagination-helpers')
 const { dayInterval, dayAdd } = require('../helpers/dayjs-helper')
+const { getUser } = require('../helpers/auth-helper')
 
 const tripServices = {
   getTrips: (req, callback) => {
+    const user = getUser(req)
     const limit = 8
     const page = Number(req.query.page) || 1
     const offset = (page - 1) * limit
 
     Trip.findAndCountAll({
+      where: { userId: user.id },
       raw: true,
       limit,
       offset
@@ -27,11 +30,12 @@ const tripServices = {
   postTrip: (req, callback) => {
     const { name, startDate, endDate, description } = req.body
     const { file } = req
+    const user = getUser(req)
     if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
 
     Promise.all([
       localFileHandler(file),
-      Trip.findOne({ where: { name } })
+      Trip.findOne({ where: { userId: user.id, name } })
     ])
       .then(([filePath, trip]) => {
         if (trip) throw new Error('This trip already exists!')
@@ -40,7 +44,8 @@ const tripServices = {
           startDate,
           endDate,
           description,
-          image: filePath || null
+          image: filePath || null,
+          userId: user.id
         })
       })
       .then(newTrip => callback(null, { newTrip, name }))
@@ -48,9 +53,12 @@ const tripServices = {
   },
   editTrip: (req, callback) => {
     const { id } = req.params
+    const user = getUser(req)
+
     Trip.findOne({ where: { id }, raw: true })
       .then(trip => {
         if (!trip) throw new Error("The trip doesn't exist!")
+        if (trip.userId !== user.id) throw new Error('Permission denied!')
 
         callback(null, { trip })
       })
@@ -60,6 +68,8 @@ const tripServices = {
     const { id } = req.params
     const { name, startDate, endDate, description } = req.body
     const { file } = req
+    const user = getUser(req)
+
     if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
 
     Promise.all([
@@ -68,6 +78,7 @@ const tripServices = {
     ])
       .then(([filePath, trip]) => {
         if (!trip) throw new Error("The trip doesn't exist!")
+        if (trip.userId !== user.id) throw new Error('Permission denied!')
         return trip.update({
           name,
           startDate,
@@ -81,9 +92,12 @@ const tripServices = {
   },
   deleteTrip: (req, callback) => {
     const { id } = req.params
+    const user = getUser(req)
+
     Trip.findByPk(id)
       .then(trip => {
         if (!trip) throw new Error("The trip doesn't exist!")
+        if (trip.userId !== user.id) throw new Error('Permission denied!')
         return trip.destroy()
       })
       .then(deletedTrip => callback(null, { deletedTrip }))
@@ -92,10 +106,12 @@ const tripServices = {
   getTrip: (req, callback) => {
     const { id } = req.params
     const currentDay = Number(req.query.day) || 1
+    const user = getUser(req)
 
     Trip.findByPk(id, { raw: true })
       .then(trip => {
         if (!trip) throw new Error("The trip doesn't exist!")
+        if (trip.userId !== user.id) throw new Error('Permission denied!')
         // tab天數顯示
         const dayCount = dayInterval(trip.startDate, trip.endDate)
         const days = Array.from({ length: dayCount }, (v, i) => i + 1)
