@@ -1,22 +1,35 @@
-<div class="card d-flex flex-column" style="width: 800px; height: 300px; margin: auto;">
-  <div class="card-body row flex-grow-1">
-    <div class="col-4 d-flex align-items-center">
-      {{#if user.image}}
-      <img class="img-responsive center-block" src="{{ user.image }}" style="width: 100%;">
-      {{else}}
-      <a href="/users/{{ user.id }}/edit" style="text-decoration: none;">
-        <div style="width: 350px; height: 350px; background-color: #dedcdb; display: flex; 
-  justify-content: center; align-items: center; text-align: center; color: #9C9C9C; font-size: 20px;">Update Now</div>
-      </a>
-      {{/if}}
-    </div>
-    <div class="col-6 d-flex flex-column justify-content-center ms-3">
-      <h2 class="text-start">{{ user.name }}</h2>
-      <p class="text-start">{{ user.email }}</p>
-      <div class="d-flex align-items-center" style=" text-align: center;">
-        <a class="btn btn-secondary" href="/users/{{ user.id }}/edit"><i class="fa-solid fa-gear"></i> Edit</a>
-        <div class="text-start ms-2" style="font-size: 12px; font-weight: 300;">✎ Updated at {{formatDate user.updateAt }}</div>
+<div style="width: 800px; margin: auto;">
+  <div class="card d-flex flex-column" style="width: 800px; height: 300px; margin: auto;">
+    <div class="mt-2" style="font-size: 20px; font-weight: 700;">▌ User Profile</div>
+    <div class="card-body row flex-grow-1">
+      <div class="col-4 d-flex align-items-center">
+        {{#if user.image}}
+        <div
+          style="width: 100%; height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+          <img class="img-responsive center-block" src="{{ user.image }}"
+            style="width: 100%; height: 100%; border-radius: 10px; object-fit: cover;">
+        </div>
+        {{else}}
+        <a href="/users/{{ user.id }}/edit" style="text-decoration: none;">
+          <div style="width: 250px; height: 200px; background-color: #dedcdb; display: flex; 
+    justify-content: center; align-items: center; text-align: center; color: #9C9C9C; font-size: 20px;">Update Now</div>
+        </a>
+        {{/if}}
+      </div>
+      <div class="col-6 d-flex flex-column justify-content-center ms-3">
+        <h2 class="text-start">{{ user.name }}</h2>
+        <p class="text-start">{{ user.email }}</p>
+        <div class="d-flex align-items-center" style=" text-align: center;">
+          <a class="btn btn-secondary" href="/users/{{ user.id }}/edit"><i class="fa-solid fa-gear"></i> Edit</a>
+          <div class="text-start ms-2" style="font-size: 12px; font-weight: 300;">✎ Updated at {{formatDate user.updateAt
+            }}</div>
+        </div>
       </div>
     </div>
   </div>
+  <div class="d-flex justify-content-end mt-2">
+    <a class="btn btn-outline-secondary" href="/trips"
+      style="margin-left: 5px; border-radius: 100px;"><i class="fa-solid fa-right-from-bracket fa-rotate-180"></i></a>
+  </div>
 </div>
+
