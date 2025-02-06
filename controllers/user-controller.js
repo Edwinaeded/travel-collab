@@ -36,6 +36,9 @@ const userController = {
       if (err) return next(err)
       res.redirect(`/users/${data.user.id}`)
     })
+  },
+  getCollaborate: (req, res, next) => {
+    res.render('collaborate')
   }
 }
 

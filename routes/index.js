@@ -32,9 +32,11 @@ router.put('/destinations/:id', authenticated, upload.single('image'), destinati
 router.delete('/destinations/:id', authenticated, destinationController.deleteDestination)
 router.post('/destinations', authenticated, upload.single('image'), destinationController.postDestination)
 
-router.get('/Users/:id/edit', authenticated, userController.editUser)
+router.get('/users/:id/edit', authenticated, userController.editUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 router.get('/users/:id', authenticated, userController.getUser)
+
+router.get('/collaborate', authenticated, userController.getCollaborate)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {
