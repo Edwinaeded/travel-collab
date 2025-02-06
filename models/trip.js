@@ -12,6 +12,18 @@ module.exports = (sequelize, DataTypes) => {
     static associate (models) {
       Trip.hasMany(models.Destination, { foreignKey: 'tripId' })
       Trip.belongsTo(models.User, { foreignKey: 'userId' })
+      Trip.belongsToMany(models.User, {
+        through: models.Share,
+        foreignKey: 'tripId',
+        otherKey: 'userId',
+        as: 'Sharers'
+      })
+      Trip.belongsToMany(models.User, {
+        through: models.Share,
+        foreignKey: 'tripId',
+        otherKey: 'sharedUserId',
+        as: 'Receivers'
+      })
     }
   }
   Trip.init({
