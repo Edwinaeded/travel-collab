@@ -33,12 +33,8 @@ const tripServices = {
     const user = getUser(req)
     if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
 
-    Promise.all([
-      localFileHandler(file),
-      Trip.findOne({ where: { userId: user.id, name } })
-    ])
-      .then(([filePath, trip]) => {
-        if (trip) throw new Error('This trip already exists!')
+    localFileHandler(file)
+      .then(filePath => {
         return Trip.create({
           name,
           startDate,
