@@ -1,8 +1,13 @@
+{{> messages}}
 <div class="card" style="width: 800px; margin: auto; padding: 10px 10px;">
   <form class="form-editProfile" action="/users/{{ user.id }}?_method=PUT" method="POST" enctype="multipart/form-data">
     <div class="form-row mb-3">
       <label class="form-label" for="name">Name</label>
       <input class="form-control" id="name" type="text" name="name" class="form-control" value="{{ user.name }}">
+    </div>
+    <div class="form-row mb-3">
+      <label class="form-label" for="shareId">Share Id</label>
+      <input class="form-control" id="shareId" type="text" name="shareId" class="form-control" value="{{ user.shareId }}">
     </div>
     <div class="form-row mb-3">
       <label class="form-label" for="image">Image</label>

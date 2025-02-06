@@ -12,7 +12,8 @@ module.exports = {
         is_admin: true,
         image: '/images/seed-photo/user-root.svg',
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
+        share_id: 'root0000'
       },
       {
         name: 'user1',
@@ -21,7 +22,8 @@ module.exports = {
         is_admin: false,
         image: '/images/seed-photo/user1.svg',
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
+        share_id: 'user1'
       },
       {
         name: 'user2',
@@ -30,7 +32,8 @@ module.exports = {
         is_admin: false,
         image: '/images/seed-photo/user2.svg',
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
+        share_id: 'user2'
       },
       {
         name: 'user3',
@@ -39,7 +42,8 @@ module.exports = {
         is_admin: false,
         image: '/images/seed-photo/user3.svg',
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
+        share_id: 'user3'
       }
     ])
   },

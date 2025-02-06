@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { User } = require('../models')
 const bcrypt = require('bcryptjs')
 const { getUser } = require('../helpers/auth-helper')
@@ -5,20 +6,25 @@ const { localFileHandler } = require('../helpers/file-helpers')
 
 const userServices = {
   postSignUp: (req, callback) => {
-    const { name, email, password, confirmPassword } = req.body
-    if (!name || !email || !password || !confirmPassword) throw new Error('Please complete all required fields')
+    const { name, email, password, confirmPassword, shareId } = req.body
+    if (!name || !email || !password || !confirmPassword || !shareId) throw new Error('Please complete all required fields')
     if (password !== confirmPassword) throw new Error('Passwords do not match!')
 
-    User.findOne({ where: { email } })
-      .then(user => {
-        if (user) throw new Error('Email already exists!')
+    Promise.all([
+      User.findOne({ where: { email } }),
+      User.findOne({ where: { shareId } })
+    ])
+      .then(([emailUser, idUser]) => {
+        if (emailUser) throw new Error('Email already exists!')
+        if (idUser) throw new Error('Share Id already exists!')
         return bcrypt.hash(password, 10)
       })
       .then(hash => {
         User.create({
           name,
           email,
-          password: hash
+          password: hash,
+          shareId
         })
       })
       .then(newUser => callback(null, { newUser }))
@@ -49,7 +55,7 @@ const userServices = {
       .catch(err => callback(err))
   },
   putUser: (req, callback) => {
-    const { name } = req.body
+    const { name, shareId } = req.body
     const { file } = req
     const currentUser = getUser(req)
     const id = Number(req.params.id)
@@ -57,13 +63,16 @@ const userServices = {
 
     Promise.all([
       User.findByPk(id),
+      User.findOne({ where: { shareId, id: { [Op.ne]: id } } }),
       localFileHandler(file)
     ])
-      .then(([user, filePath]) => {
+      .then(([user, idUser, filePath]) => {
         if (!user) throw new Error("User does't exist!")
+        if (idUser) throw new Error('Share Id already exists!')
         return user.update({
           name,
-          image: filePath || user.image
+          image: filePath || user.image,
+          shareId
         })
       })
       .then(updatedUser => callback(null, { user: updatedUser.toJSON() }))
