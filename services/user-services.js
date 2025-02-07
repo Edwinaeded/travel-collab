@@ -81,6 +81,7 @@ const userServices = {
   getCollaborate: (req, callback) => {
     const shareId = req.query.shareId || null
     const tripId = Number(req.query.trip)
+    const currentUser = getUser(req)
 
     if (!tripId) throw new Error('Invalid trip!')
     if (!shareId) {
@@ -89,6 +90,7 @@ const userServices = {
       })
         .then(trip => {
           if (!trip) throw new Error("Trip doesn't exist!")
+          if (trip.userId !== currentUser.id) throw new Error('Permission denied!')
           return callback(null, { trip: trip.toJSON() })
         })
         .catch(err => callback(err))
@@ -108,7 +110,8 @@ const userServices = {
     }
   },
   postCollaborate: (req, callback) => {
-    const { tripId, sharedUserId } = req.body
+    const tripId = Number(req.body.tripId)
+    const sharedUserId = Number(req.body.sharedUserId)
     const currentUser = getUser(req)
 
     Promise.all([
@@ -118,8 +121,10 @@ const userServices = {
       .then(([trip, sharedUser]) => {
         if (!trip) throw new Error("Trip doesn't exist!")
         if (!sharedUser) throw new Error("User doesn't exist!")
+        if (trip.userId !== currentUser.id) throw new Error('Permission denied!')
         const isAdded = Array.isArray(trip.Receivers) && trip.Receivers.some(receiver => receiver.id === sharedUser.id)
         if (isAdded) throw new Error('User already added!')
+        if (sharedUserId === currentUser.id) throw new Error('You are the trip owner!')
 
         return Share.create({
           userId: currentUser.id,
