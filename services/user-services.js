@@ -109,24 +109,40 @@ const userServices = {
   },
   postCollaborate: (req, callback) => {
     const { tripId, sharedUserId } = req.body
+    const currentUser = getUser(req)
 
     Promise.all([
       Trip.findByPk(tripId, { include: { model: User, as: 'Receivers' } }),
       User.findByPk(sharedUserId)
     ])
-      .then(([trip, user]) => {
+      .then(([trip, sharedUser]) => {
         if (!trip) throw new Error("Trip doesn't exist!")
-        if (!user) throw new Error("User doesn't exist!")
-        const isAdded = Array.isArray(trip.Receivers) && trip.Receivers.some(receiver => receiver.id === user.id)
+        if (!sharedUser) throw new Error("User doesn't exist!")
+        const isAdded = Array.isArray(trip.Receivers) && trip.Receivers.some(receiver => receiver.id === sharedUser.id)
         if (isAdded) throw new Error('User already added!')
 
         return Share.create({
-          userId: req.user.id,
+          userId: currentUser.id,
           tripId,
           sharedUserId
         })
       })
       .then(newShare => callback(null, { newShare: newShare.toJSON(), tripId }))
+      .catch(err => callback(err))
+  },
+  editCollaborate: (req, callback) => {
+    const currentUser = getUser(req)
+    const tripId = Number(req.query.trip)
+
+    Promise.all([
+      Trip.findByPk(tripId, { include: { model: User, as: 'Receivers' } }),
+      User.findByPk(currentUser.id)
+    ])
+      .then(([trip, user]) => {
+        if (!trip) throw new Error("Trip doesn't exist!")
+        if (trip.userId !== currentUser.id) throw new Error('Permission denied!')
+        return callback(null, { trip: trip.toJSON() })
+      })
       .catch(err => callback(err))
   }
 }

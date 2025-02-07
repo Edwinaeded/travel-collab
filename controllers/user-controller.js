@@ -29,7 +29,7 @@ const userController = {
     userServices.getUser(req, (err, data) => err ? next(err) : res.render('user', data))
   },
   editUser: (req, res, next) => {
-    userServices.editUser(req, (err, data) => err ? next(err) : res.render('user-edit', data))
+    userServices.editUser(req, (err, data) => err ? next(err) : res.render('edit-user', data))
   },
   putUser: (req, res, next) => {
     userServices.putUser(req, (err, data) => {
@@ -48,6 +48,12 @@ const userController = {
       if (err) return next(err)
       req.flash('success_msg', 'Co-editor added!')
       res.redirect(`/collaborate?trip=${data.tripId}`)
+    })
+  },
+  editCollaborate: (req, res, next) => {
+    userServices.editCollaborate(req, (err, data) => {
+      if (err) return next(err)
+      res.render('edit-collaborate', data)
     })
   }
 }
