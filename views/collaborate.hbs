@@ -8,26 +8,30 @@
         class="fa-solid fa-right-from-bracket fa-rotate-180"></i></a>
   </div>
 </div>
+{{#if trip.Receivers.length}}
 <div class="d-flex justify-content-start mb-4 align-items-center">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p style="font-size: 12px;">Co-editor</p>
-  <img src="{{ user.image }}"
+  {{#each trip.Receivers}}
+  <img src="{{this.image}}"
     style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%; margin-left: 5px;" data-bs-toggle="tooltip"
-    data-bs-placement="bottom" title="{{user.name}}">
-  <img src="{{ user.image }}"
-    style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%; margin-left: 5px;" data-bs-toggle="tooltip"
-    data-bs-placement="bottom" title="{{user.name}}">
-  <a href="/collaborate?trip={{trip.id}}" class="ms-2"><i class="fa-solid fa-circle-plus"></i></a>
+    data-bs-placement="bottom" title="{{this.name}}">
+  {{/each}}
 </div>
-
-{{> messages}}
+{{else}}
+<div class="d-flex justify-content-start mb-4 align-items-center">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+{{/if}}
 
 <div class="container row">
   <div class="col-md-5">
+    {{> messages}}
     <div>
       <form action="/collaborate" method="GET">
         <div class="mb-2">搜尋好友</div>
         <div class="d-flex align-items-center">
           <div class="form-floating me-1 flex-grow-1">
+            <input type="hidden" name="trip" value="{{trip.id}}">
             <input type="text" class="form-control me-2" id="shareId" name="shareId" placeholder="shareId" required>
             <label for="shareId" style="font-size: 15px;">Share ID</label>
           </div>
@@ -35,17 +39,19 @@
         </div>
       </form>
     </div>
+    {{#if searchUser}}
     <div class="mt-3 ms-3" style="width: 100px;">
-      <img src="{{user.image}}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
-      <div class="mt-1" style="text-align: center; font-size: 20px; font-weight: 600;">{{user.name}}</div>
+      <img src="{{searchUser.image}}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+      <div class="mt-1" style="text-align: center; font-size: 20px; font-weight: 600;">{{searchUser.name}}</div>
       <form action="/collaborate" method="POST" style="display: flex; justify-content: center;">
-        <input type="hidden" value="{{shareId}}">
+        <input type="hidden" value="{{trip.id}}">
+        <input type="hidden" value="{{searchUser.id}}">
         <button class="btn btn-dark">加入共編</button>
       </form>
     </div>
+    {{/if}}
   </div>
   <div class="col-md-6" style="height: 400px; background-image: url('/images/collaborate.svg'); background-size: 80%; background-position: right bottom;
 background-repeat: no-repeat;">
-    {{!-- <img src="/images/collaborate.svg" alt="Banner" style="width: 100%; object-fit: cover;"> --}}
   </div>
 </div>

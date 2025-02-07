@@ -1,5 +1,5 @@
 const { Op } = require('sequelize')
-const { User } = require('../models')
+const { User, Trip } = require('../models')
 const bcrypt = require('bcryptjs')
 const { getUser } = require('../helpers/auth-helper')
 const { localFileHandler } = require('../helpers/file-helpers')
@@ -37,7 +37,7 @@ const userServices = {
 
     User.findByPk(id, { raw: true })
       .then(user => {
-        if (!user) throw new Error("User does't exist!")
+        if (!user) throw new Error("User doesn't exist!")
         return callback(null, { user })
       })
       .catch(err => callback(err))
@@ -49,7 +49,7 @@ const userServices = {
 
     User.findByPk(id, { raw: true })
       .then(user => {
-        if (!user) throw new Error("User does't exist!")
+        if (!user) throw new Error("User doesn't exist!")
         return callback(null, { user })
       })
       .catch(err => callback(err))
@@ -67,7 +67,7 @@ const userServices = {
       localFileHandler(file)
     ])
       .then(([user, idUser, filePath]) => {
-        if (!user) throw new Error("User does't exist!")
+        if (!user) throw new Error("User doesn't exist!")
         if (idUser) throw new Error('Share Id already exists!')
         return user.update({
           name,
@@ -77,6 +77,35 @@ const userServices = {
       })
       .then(updatedUser => callback(null, { user: updatedUser.toJSON() }))
       .catch(err => callback(err))
+  },
+  getCollaborate: (req, callback) => {
+    const shareId = req.query.shareId || null
+    const tripId = Number(req.query.trip)
+
+    if (!tripId) throw new Error('Invalid trip!')
+    if (!shareId) {
+      Trip.findByPk(tripId, {
+        include: [{ model: User, as: 'Receivers' }]
+      })
+        .then(trip => {
+          if (!trip) throw new Error("Trip doesn't exist!")
+          return callback(null, { trip: trip.toJSON() })
+        })
+        .catch(err => callback(err))
+    } else {
+      Promise.all([
+        Trip.findByPk(tripId, {
+          include: [{ model: User, as: 'Receivers' }]
+        }),
+        User.findOne({ where: { shareId }, raw: true })
+      ])
+        .then(([trip, user]) => {
+          if (!trip) throw new Error("Trip doesn't exist!")
+          if (!user) throw new Error("User doesn't exist!")
+          return callback(null, { trip: trip.toJSON(), searchUser: user })
+        })
+        .catch(err => callback(err))
+    }
   }
 }
 

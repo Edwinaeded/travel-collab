@@ -38,7 +38,10 @@ const userController = {
     })
   },
   getCollaborate: (req, res, next) => {
-    res.render('collaborate')
+    userServices.getCollaborate(req, (err, data) => {
+      if (err) return next(err)
+      res.render('collaborate', data)
+    })
   }
 }
 
