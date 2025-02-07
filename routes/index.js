@@ -37,6 +37,7 @@ router.put('/users/:id', authenticated, upload.single('image'), userController.p
 router.get('/users/:id', authenticated, userController.getUser)
 
 router.get('/collaborate', authenticated, userController.getCollaborate)
+router.post('/collaborate', authenticated, userController.postCollaborate)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {

@@ -44,8 +44,8 @@
       <img src="{{searchUser.image}}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
       <div class="mt-1" style="text-align: center; font-size: 20px; font-weight: 600;">{{searchUser.name}}</div>
       <form action="/collaborate" method="POST" style="display: flex; justify-content: center;">
-        <input type="hidden" value="{{trip.id}}">
-        <input type="hidden" value="{{searchUser.id}}">
+        <input type="hidden" name="tripId" value="{{trip.id}}">
+        <input type="hidden" name="sharedUserId" value="{{searchUser.id}}">
         <button class="btn btn-dark">加入共編</button>
       </form>
     </div>

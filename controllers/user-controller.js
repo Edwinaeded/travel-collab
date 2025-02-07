@@ -42,6 +42,13 @@ const userController = {
       if (err) return next(err)
       res.render('collaborate', data)
     })
+  },
+  postCollaborate: (req, res, next) => {
+    userServices.postCollaborate(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_msg', 'Co-editor added!')
+      res.redirect(`/collaborate?trip=${data.tripId}`)
+    })
   }
 }
 

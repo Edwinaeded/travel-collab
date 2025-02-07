@@ -1,5 +1,5 @@
 const { Op } = require('sequelize')
-const { User, Trip } = require('../models')
+const { User, Trip, Share } = require('../models')
 const bcrypt = require('bcryptjs')
 const { getUser } = require('../helpers/auth-helper')
 const { localFileHandler } = require('../helpers/file-helpers')
@@ -106,6 +106,28 @@ const userServices = {
         })
         .catch(err => callback(err))
     }
+  },
+  postCollaborate: (req, callback) => {
+    const { tripId, sharedUserId } = req.body
+
+    Promise.all([
+      Trip.findByPk(tripId, { include: { model: User, as: 'Receivers' } }),
+      User.findByPk(sharedUserId)
+    ])
+      .then(([trip, user]) => {
+        if (!trip) throw new Error("Trip doesn't exist!")
+        if (!user) throw new Error("User doesn't exist!")
+        const isAdded = Array.isArray(trip.Receivers) && trip.Receivers.some(receiver => receiver.id === user.id)
+        if (isAdded) throw new Error('User already added!')
+
+        return Share.create({
+          userId: req.user.id,
+          tripId,
+          sharedUserId
+        })
+      })
+      .then(newShare => callback(null, { newShare: newShare.toJSON(), tripId }))
+      .catch(err => callback(err))
   }
 }
 
