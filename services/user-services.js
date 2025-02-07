@@ -149,6 +149,25 @@ const userServices = {
         return callback(null, { trip: trip.toJSON() })
       })
       .catch(err => callback(err))
+  },
+  deleteCollaborate: (req, callback) => {
+    const sharedUserId = Number(req.body.sharedUserId)
+    const tripId = Number(req.body.tripId)
+    const currentUser = getUser(req)
+
+    Promise.all([
+      Share.findOne({ where: { tripId, sharedUserId } }),
+      Trip.findByPk(tripId, { raw: true })
+    ])
+      .then(([share, trip]) => {
+        if (!share) throw new Error('Co-editing record not found!')
+        if (!trip) throw new Error("Trip doesn't exist!")
+        if (trip.userId !== currentUser.id) throw new Error('Permission denied!')
+        Share.destroy({ where: { tripId, sharedUserId } })
+          .then(deletedShare => callback(null, { deletedCount: deletedShare, tripId: trip.id }))
+          .catch(err => callback(err))
+      })
+      .catch(err => callback(err))
   }
 }
 

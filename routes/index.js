@@ -39,6 +39,7 @@ router.get('/users/:id', authenticated, userController.getUser)
 router.get('/collaborate/edit', authenticated, userController.editCollaborate)
 router.get('/collaborate', authenticated, userController.getCollaborate)
 router.post('/collaborate', authenticated, userController.postCollaborate)
+router.delete('/collaborate', authenticated, userController.deleteCollaborate)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {

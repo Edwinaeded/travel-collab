@@ -55,6 +55,13 @@ const userController = {
       if (err) return next(err)
       res.render('edit-collaborate', data)
     })
+  },
+  deleteCollaborate: (req, res, next) => {
+    userServices.deleteCollaborate(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_msg', 'Co-editor removed!')
+      res.redirect(`/collaborate/edit?trip=${data.tripId}`)
+    })
   }
 }
 
