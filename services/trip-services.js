@@ -104,14 +104,23 @@ const tripServices = {
     const currentDay = Number(req.query.day) || 1
     const user = getUser(req)
 
-    Trip.findByPk(id, { raw: true })
-      .then(trip => {
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
+    Trip.findByPk(id, {
+      include: [
+        { model: User, as: 'Sharers' },
+        { model: User, as: 'Receivers' }
+      ]
+    })
+      .then(tripData => {
+        if (!tripData) throw new Error("The trip doesn't exist!")
+        const trip = tripData.toJSON()
+        const isReceived = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceived) throw new Error('Permission denied!')
+
         // tab天數顯示
         const dayCount = dayInterval(trip.startDate, trip.endDate)
         const days = Array.from({ length: dayCount }, (v, i) => i + 1)
         if (!days.includes(currentDay)) throw new Error("The chosen day doesn't exist!")
+
         // 找出符合指定day的destination資料
         Destination.findAll({
           raw: true,

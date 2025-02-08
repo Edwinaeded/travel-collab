@@ -1,12 +1,15 @@
+<!-- Title -->
 <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
   <div style="display: inline-block; font-size: 25px; font-weight: 700;">TRIP LIST</div>
   <a href="/trips/create" class="btn btn-lg"
     style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i
       class="fa-solid fa-circle-plus"></i></a>
 </div>
+
 {{> messages}}
 
 {{> trips-tabs route='myTrips'}}
+
 <!-- 旅程卡片區 -->
 {{#if trips.length}}
 <div class="row">
