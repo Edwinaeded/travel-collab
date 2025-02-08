@@ -51,10 +51,14 @@ const tripServices = {
     const { id } = req.params
     const user = getUser(req)
 
-    Trip.findOne({ where: { id }, raw: true })
-      .then(trip => {
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
+    Trip.findByPk(id, {
+      include: [{ model: User, as: 'Receivers' }]
+    })
+      .then(tripData => {
+        if (!tripData) throw new Error("The trip doesn't exist!")
+        const trip = tripData.toJSON()
+        const isReceiver = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
 
         callback(null, { trip })
       })
@@ -70,12 +74,14 @@ const tripServices = {
 
     Promise.all([
       localFileHandler(file),
-      Trip.findByPk(id)
+      Trip.findByPk(id, { include: [{ model: User, as: 'Receivers' }] })
     ])
-      .then(([filePath, trip]) => {
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
-        return trip.update({
+      .then(([filePath, tripData]) => {
+        if (!tripData) throw new Error("The trip doesn't exist!")
+        const trip = tripData.toJSON()
+        const isReceiver = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
+        return tripData.update({
           name,
           startDate,
           endDate,
@@ -113,8 +119,8 @@ const tripServices = {
       .then(tripData => {
         if (!tripData) throw new Error("The trip doesn't exist!")
         const trip = tripData.toJSON()
-        const isReceived = trip.Receivers.some(r => r.id === user.id)
-        if (trip.userId !== user.id && !isReceived) throw new Error('Permission denied!')
+        const isReceiver = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
 
         // tab天數顯示
         const dayCount = dayInterval(trip.startDate, trip.endDate)

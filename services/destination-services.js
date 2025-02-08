@@ -1,4 +1,4 @@
-const { Trip, Destination } = require('../models')
+const { Trip, Destination, User } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 const { dayInterval, timeToUtc } = require('../helpers/dayjs-helper')
 const { getUser } = require('../helpers/auth-helper')
@@ -9,13 +9,13 @@ const destinationServices = {
     const user = getUser(req)
 
     Destination.findByPk(id, {
-      include: Trip,
-      raw: true,
-      nest: true
+      include: [{ model: Trip, include: [{ model: User, as: 'Receivers' }] }]
     })
-      .then(destination => {
-        if (!destination) throw new Error("The destination doesn't exist!")
-        if (destination.Trip.userId !== user.id) throw new Error('Permission denied!')
+      .then(destinationData => {
+        if (!destinationData) throw new Error("The destination doesn't exist!")
+        const destination = destinationData.toJSON()
+        const isReceiver = destination.Trip.Receivers.some(r => r.id === user.id)
+        if (destination.Trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
         return callback(null, { destination })
       })
       .catch(err => callback(err))
@@ -24,10 +24,12 @@ const destinationServices = {
     const id = req.query.trip
     const user = getUser(req)
 
-    Trip.findByPk(id, { raw: true })
-      .then(trip => {
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
+    Trip.findByPk(id, { include: [{ model: User, as: 'Receivers' }] })
+      .then(tripData => {
+        if (!tripData) throw new Error("The trip doesn't exist!")
+        const trip = tripData.toJSON()
+        const isReceiver = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
 
         return callback(null, { trip })
       })
@@ -39,10 +41,15 @@ const destinationServices = {
     const user = getUser(req)
     if (!name || !date || !startTime || !endTime) throw new Error('Please complete all required fields')
 
-    Promise.all([Trip.findByPk(tripId), localFileHandler(file)])
-      .then(([trip, filePath]) => {
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
+    Promise.all([
+      Trip.findByPk(tripId, { include: [{ model: User, as: 'Receivers' }] }),
+      localFileHandler(file)
+    ])
+      .then(([tripData, filePath]) => {
+        if (!tripData) throw new Error("The trip doesn't exist!")
+        const trip = tripData.toJSON()
+        const isReceiver = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
 
         // 確認時間在trip區間內
         const tripDayCount = dayInterval(trip.startDate, trip.endDate)
@@ -69,15 +76,16 @@ const destinationServices = {
     const user = getUser(req)
 
     Destination.findByPk(id, {
-      include: Trip
+      include: [{ model: Trip, include: [{ model: User, as: 'Receivers' }] }]
     })
-      .then(destination => {
-        if (!destination) throw new Error("The destination doesn't exist!")
-        const deletedData = destination.toJSON()
-        if (deletedData.Trip.userId !== user.id) throw new Error('Permission denied!')
+      .then(destinationData => {
+        if (!destinationData) throw new Error("The destination doesn't exist!")
+        const destination = destinationData.toJSON()
+        const isReceiver = destination.Trip.Receivers.some(r => r.id === user.id)
+        if (destination.Trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
 
-        return destination.destroy()
-          .then(() => callback(null, { deletedDestination: deletedData }))
+        return destinationData.destroy()
+          .then(() => callback(null, { deletedDestination: destination }))
           .catch(err => callback(err))
       })
       .catch(err => callback(err))
@@ -88,11 +96,14 @@ const destinationServices = {
 
     Promise.all([
       Destination.findByPk(id, { raw: true }),
-      Destination.findByPk(id, { raw: true }).then(destination => destination ? Trip.findByPk(destination.tripId, { raw: true }) : Promise.reject(new Error("The destination doesn't exist!")))
+      Destination.findByPk(id, { raw: true })
+        .then(destination => destination ? Trip.findByPk(destination.tripId, { include: { model: User, as: 'Receivers' } }) : Promise.reject(new Error("The destination doesn't exist!")))
     ])
-      .then(([destination, trip]) => {
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
+      .then(([destination, tripData]) => {
+        if (!tripData) throw new Error("The trip doesn't exist!")
+        const trip = tripData.toJSON()
+        const isReceiver = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
         return callback(null, { destination, trip })
       })
       .catch(err => callback(err))
@@ -107,13 +118,15 @@ const destinationServices = {
 
     Promise.all([
       Destination.findByPk(id),
-      Trip.findByPk(tripId),
+      Trip.findByPk(tripId, { include: { model: User, as: 'Receivers' } }),
       localFileHandler(file)
     ])
-      .then(([destination, trip, filePath]) => {
+      .then(([destination, tripData, filePath]) => {
         if (!destination) throw new Error("The destination doesn't exist!")
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
+        if (!tripData) throw new Error("The trip doesn't exist!")
+        const trip = tripData.toJSON()
+        const isReceiver = trip.Receivers.some(r => r.id === user.id)
+        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
 
         // 確認時間在trip區間內
         const tripDayCount = dayInterval(trip.startDate, trip.endDate)
