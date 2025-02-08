@@ -17,6 +17,7 @@ router.post('/signin', passport.authenticate('local', {
 }), userController.postSignIn)
 router.post('/logout', userController.postLogout)
 
+router.get('/trips/shared', authenticated, tripController.getSharedTrips)
 router.get('/trips/create', authenticated, tripController.createTrip)
 router.get('/trips/:id/edit', authenticated, tripController.editTrip)
 router.get('/trips/:id', authenticated, tripController.getTrip)

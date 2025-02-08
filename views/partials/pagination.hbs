@@ -1,0 +1,31 @@
+<!-- 分頁器 -->
+<nav class="d-flex mt-3 justify-content-center" aria-label="pagination">
+  <ul class="pagination">
+    <li class="page-item {{#ifCond currentPage 1}}disabled{{else}}{{/ifCond}}">
+      <a class="page-link" 
+      href={{#ifCond route 'myTrips'}}"/trips?page={{previousPage}}"{{/ifCond}}
+      {{#ifCond route 'sharedTrips'}}"/trips/shared?page={{previousPage}}"{{/ifCond}} aria-label="Previous">
+        <span aria-hidden="true"><i class="fa-solid fa-caret-left fa-lg"></i></span>
+      </a>
+    </li>
+    {{#each pages}}
+    {{#ifCond this ../currentPage}}
+      <li class="page-item active"><a class="page-link" href="#">{{this}}</a></li>
+    {{else}}
+      {{#ifCond ../route 'myTrips'}}
+      <li class="page-item"><a class="page-link" href="/trips?page={{this}}">{{this}}</a></li>
+      {{/ifCond}}
+      {{#ifCond ../route 'sharedTrips'}}
+      <li class="page-item"><a class="page-link" href="/trips/shared?page={{this}}">{{this}}</a></li>
+      {{/ifCond}}
+    {{/ifCond}}
+    {{/each}}
+    <li class="page-item {{#ifCond currentPage totalPage}}disabled{{else}}{{/ifCond}}">
+      <a class="page-link" 
+      href={{#ifCond route 'myTrips'}}"/trips?page={{nextPage}}"{{/ifCond}}
+      {{#ifCond route 'sharedTrips'}}"/trips/shared?page={{nextPage}}"{{/ifCond}} aria-label="Next">
+        <span aria-hidden="true"><i class="fa-solid fa-caret-right fa-lg"></i></span>
+      </a>
+    </li>
+  </ul>
+</nav>

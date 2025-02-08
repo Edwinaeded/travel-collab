@@ -1,4 +1,4 @@
-const { Trip, Destination } = require('../models')
+const { Trip, Destination, User } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 const { getPagination } = require('../helpers/pagination-helpers')
 const { dayInterval, dayAdd } = require('../helpers/dayjs-helper')
@@ -128,6 +128,26 @@ const tripServices = {
             }))
             callback(null, { trip, destinations: data, days, currentDay })
           })
+      })
+      .catch(err => callback(err))
+  },
+  getSharedTrips: (req, callback) => {
+    const user = getUser(req)
+    const limit = 8
+    const page = Number(req.query.page) || 1
+    const offset = (page - 1) * limit
+
+    User.findByPk(user.id, {
+      include: [{ model: Trip, as: 'ReceivedTrips' }]
+    })
+      .then(user => {
+        const pagination = getPagination(user.ReceivedTrips.length, limit, offset)
+        const tripsData = user.ReceivedTrips.map(trip => ({
+          ...trip.toJSON(),
+          description: trip.toJSON().description.substring(0, 50)
+        }))
+        const tripsDataSlice = tripsData.slice(offset, offset + 8)
+        return callback(null, { trips: tripsDataSlice, ...pagination })
       })
       .catch(err => callback(err))
   }

@@ -6,8 +6,8 @@ const getPagination = (count = 16, limit = 8, offset = 8) => {
   const nextPage = currentPage + 1 > totalPage ? currentPage : currentPage + 1
 
   return {
-    totalPage,
-    pages,
+    totalPage: totalPage === 0 ? 1 : totalPage,
+    pages: totalPage === 0 ? [1] : pages,
     currentPage,
     previousPage,
     nextPage

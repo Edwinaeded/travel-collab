@@ -1,0 +1,51 @@
+<div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+  <div style="display: inline-block; font-size: 25px; font-weight: 700;">TRIP LIST</div>
+</div>
+{{> messages}}
+
+{{> trips-tabs route='sharedTrips'}}
+<!-- 旅程卡片區 -->
+{{#if trips.length}}
+<div class="row">
+  {{#each trips}}
+  <div class="col-md-3 mt-3">
+    <div class="card text-left">
+      <div class="card-header">
+        <div style="color: #8a817c; font-size: 15px; font-weight: 200;">{{this.name}}</div>
+      </div>
+      <div class="card-body" style="height: 80%;">
+        <img class="card-img-top img-fluid"
+          src="{{#if this.image}}{{this.image}}{{else}}/images/trip-fallback-image.svg{{/if}}" alt="Card image cap"
+          style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; transition: opacity 0.5s; opacity:0;"
+          onload="this.style.opacity=1;">
+        <div class="badge bg-dark mt-2 mb-2 text-light" style="font-size: 12px; font-weight: 300;">{{formatDate
+          this.startDate}}-{{formatDate this.endDate}}</div>
+        <p class="card-text" style="font-size: 12px; min-height: 55px;">{{this.description}}</p>
+        <div class="d-flex justify-content-end">
+          <a id="detail-button" href="/trips/{{this.id}}" class="btn"
+            style="background-color: #ffd166; color: white; border-radius: 100px; margin-right: 5px;"><i
+              class="fa-solid fa-suitcase-rolling"></i></a>
+          <a id="edit-button" href="/trips/{{this.id}}/edit" class="btn btn-outline-primary"
+            style="border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-pencil fa-sm"></i></a>
+          <form action="/trips/{{this.id}}?_method=DELETE" method="POST">
+            <button id="delete-button" class="btn btn-outline-secondary" style="border-radius: 100px;"
+              onclick="return confirm('Are you certain you want to delete [ {{this.name}} ] ?')"><i
+                class="fa-solid fa-trash-can fa-sm"></i></button>
+          </form>
+        </div>
+      </div>
+      <div class="card-footer text-muted text-center" style="font-size: 12px;">
+        Created at {{formatDate this.createdAt}}
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{else}}
+<div class="container d-flex content-justify-center">
+  <div class="mt-4" style="height: 350px; margin: auto; font-size: 20px; font-weight: 600;">尚未有被分享的旅程，馬上約朋友一起吧～
+  </div>
+</div>
+{{/if}}
+
+{{> pagination route='sharedTrips'}}

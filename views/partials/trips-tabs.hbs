@@ -1,0 +1,12 @@
+<div class="container mt-3">
+  <ul class="nav nav-tabs" style="width: 100%; margin: auto;">
+    <li class="nav-item">
+      <a class="nav-link {{#ifCond route 'myTrips'}}active{{/ifCond}}" aria-current="page"
+        href="/trips">My Trips</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{#ifCond route 'sharedTrips'}}active{{/ifCond}}" aria-current="page"
+        href="/trips/shared">Shared Trips</a>
+    </li>
+  </ul>
+</div>

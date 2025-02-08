@@ -40,6 +40,12 @@ const tripController = {
       if (err) return next(err)
       return res.render('trip', data)
     })
+  },
+  getSharedTrips: (req, res, next) => {
+    tripServices.getSharedTrips(req, (err, data) => {
+      if (err) return next(err)
+      return res.render('trips-shared', data)
+    })
   }
 }
 

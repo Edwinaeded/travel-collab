@@ -15,7 +15,6 @@ const userController = {
     res.render('sign-in')
   },
   postSignIn: (req, res, next) => {
-    req.flash('success_msg', 'Sign-in successful!')
     res.redirect('/trips')
   },
   postLogout: (req, res, next) => {

@@ -4,8 +4,9 @@
     style="background-color: #0077b6; color: white; font-size: 18px; font-weight: 300; border-radius: 100px;">ADD <i
       class="fa-solid fa-circle-plus"></i></a>
 </div>
-{{>messages}}
+{{> messages}}
 
+{{> trips-tabs route='myTrips'}}
 <!-- 旅程卡片區 -->
 {{#if trips.length}}
 <div class="row">
@@ -42,25 +43,4 @@
 </div>
 {{/if}}
 
-<!-- 分頁器 -->
-<nav class="d-flex mt-3 justify-content-center" aria-label="pagination">
-  <ul class="pagination">
-    <li class="page-item {{#ifCond currentPage 1}}disabled{{else}}{{/ifCond}}">
-      <a class="page-link" href="/trips?page={{previousPage}}" aria-label="Previous">
-        <span aria-hidden="true"><i class="fa-solid fa-caret-left fa-lg"></i></span>
-      </a>
-    </li>
-    {{#each pages}}
-      {{#ifCond this ../currentPage}}
-    <li class="page-item active"><a class="page-link" href="#">{{this}}</a></li>
-      {{else}}
-    <li class="page-item"><a class="page-link" href="/trips?page={{this}}">{{this}}</a></li>
-      {{/ifCond}}
-    {{/each}}
-    <li class="page-item {{#ifCond currentPage totalPage}}disabled{{else}}{{/ifCond}}">
-      <a class="page-link" href="/trips?page={{nextPage}}" aria-label="Next">
-        <span aria-hidden="true"><i class="fa-solid fa-caret-right fa-lg"></i></span>
-      </a>
-    </li>
-  </ul>
-</nav>
+{{> pagination route='myTrips'}}
