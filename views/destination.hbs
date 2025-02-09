@@ -1,4 +1,5 @@
 {{> messages}}
+<!-- Title -->
 <div class="container d-flex justify-content-between">
   <div style="font-size: 25px; font-weight: 700;">📍{{destination.name}}</div>
   <div>
@@ -7,6 +8,7 @@
   </div>
 </div>
 
+<!-- 主資料區 -->
 <div class="container row mt-3">
   <div class="col-md-5">
     <img src="{{#if destination.image}}{{destination.image}}{{else}}/images/location-fallback-city.svg{{/if}}" style="width: 80%;">
@@ -22,3 +24,35 @@
     <div>{{destination.description}}</div>
   </div>
 </div>
+
+<!-- 留言區 -->
+<div class="badge ms-2 mt-3 mb-3 text-light" style="font-size: 16px; font-weight: 400; background-color: #999999;"><i class="fa-solid fa-comments"></i> COMMENTS </div>
+<blockquote class="blockquote ms-2 mt-2 mb-0">
+  <div class="d-flex align-items-center">
+    <img src="{{user.image}}" style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%; margin-left: 5px;"
+      data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{this.name}}">
+    <div class="ms-2" style="font-size: 15px;">{{user.name}} : </div>
+  </div>
+  <div class="ms-5 mt-1 mb-4" style="font-size: 16px; font-weight: 600;">這個景點感覺很讚！</div>
+  <footer class="ms-5 blockquote-footer" style="font-size: 14px;">{{relativeTimeFromNow user.updatedAt}}</footer>
+</blockquote>
+<hr>
+<blockquote class="blockquote ms-2 mt-2 mb-0">
+  <div class="d-flex align-items-center">
+    <img src="{{user.image}}"
+      style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%; margin-left: 5px;"
+      data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{this.name}}">
+    <div class="ms-2" style="font-size: 15px;">{{user.name}} : </div>
+  </div>
+  <div class="ms-5 mt-1 mb-4" style="font-size: 16px; font-weight: 600;">這個景點感覺很讚！</div>
+  <footer class="ms-5 blockquote-footer" style="font-size: 14px;">{{relativeTimeFromNow user.updatedAt}}</footer>
+</blockquote>
+<hr>
+<form action="/comments" method="POST">
+  <div class="form-row mb-3">
+    <label class="form-label" for="text">COMMENT NOW : </label>
+    <textarea class="form-control" id="text" name="text" rows="3"></textarea>
+  </div>
+  <input type="hidden" name="destinationId" value="{{destination.id}}" />
+  <button type="submit" class="btn btn-outline-dark" style="border-radius: 25px;">Submit __<i class="fa-solid fa-pencil fa-sm"></i></button>
+</form>
