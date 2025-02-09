@@ -22,7 +22,7 @@
       <div class="card-body" style="height: 80%;">
         <img class="card-img-top img-fluid" src="{{#if this.image}}{{this.image}}{{else}}/images/trip-fallback-image.svg{{/if}}" alt="Card image cap" style="width: 100%; height: 180px; object-fit: cover; border-radius: 4px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
         <div class="badge bg-dark mt-2 mb-2 text-light" style="font-size: 12px; font-weight: 300;">{{formatDate this.startDate}}-{{formatDate this.endDate}}</div>
-        <p class="card-text" style="font-size: 12px; min-height: 55px;">{{this.description}}</p>
+        <p class="card-text" style="font-size: 13px; min-height: 55px;">{{this.description}}</p>
         <div class="d-flex justify-content-end">
           <a id="detail-button" href="/trips/{{this.id}}" class="btn"
             style="background-color: #ffd166; color: white; border-radius: 100px; margin-right: 5px;"><i class="fa-solid fa-suitcase-rolling"></i></a>

@@ -1,4 +1,4 @@
-const { Trip, Destination, User } = require('../models')
+const { Trip, Destination, User, Comment } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 const { getPagination } = require('../helpers/pagination-helpers')
 const { dayInterval, dayAdd } = require('../helpers/dayjs-helper')
@@ -129,20 +129,22 @@ const tripServices = {
 
         // 找出符合指定day的destination資料
         Destination.findAll({
-          raw: true,
           where: {
             tripId: id,
             date: dayAdd(trip.startDate, currentDay - 1).toJSON()
           },
+          include: Comment,
           order: [['startTime'], ['endTime']]
         })
-          .then(destinations => {
-            const data = destinations.map(destination => ({
-              ...destination,
-              description: destination.description.substring(0, 180)
+          .then(destinationsData => {
+            const data = destinationsData.map((destination, i) => ({
+              ...destination.toJSON(),
+              description: destination.toJSON().description.substring(0, 180),
+              count: i + 1
             }))
             callback(null, { trip, destinations: data, days, currentDay })
           })
+          .catch(err => callback(err))
       })
       .catch(err => callback(err))
   },

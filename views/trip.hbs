@@ -34,7 +34,7 @@
 
 <!-- 天數tabs -->
 <div class="container">
-  <ul class="nav nav-tabs" style="width: 85%; margin: auto;">
+  <ul class="nav nav-tabs" style="width: 100%; margin: auto;">
     {{#each days}}
     <li class="nav-item">
       <a class="nav-link {{#ifCond ../currentDay this}}active{{/ifCond}}" aria-current="page" href="/trips/{{../trip.id}}?day={{this}}">Day {{this}}</a>
@@ -47,15 +47,20 @@
 <div class="container">
   {{#if destinations}}
     {{#each destinations}}
-    <div class="card mt-3" style="width: 70%; margin: auto;">
+    <div class="card mt-3" style="width: 75%; margin: auto;">
       <div class="card-body row" style="align-items: center;">
+        <div class="col-md-1 d-flex justify-content-center" style="font-size: 15px; font-weight: 300;">{{this.count}}</div>
         <img class="col-md-3" src="{{#if this.image}}{{this.image}}{{else}}/images/location-fallback-city.svg{{/if}}"
           style="height: 70%; object-fit: cover;">
         <div class="location-content col-md-2" style="margin: auto 20px;">
           <div style="font-weight: 400; font-size: 15px;">{{formatTime this.startTime}} ~ {{formatTime this.endTime}}</div>
-          <div style="font-weight: 800; font-size: 20px;">{{this.name}}</div>
+          <div class="mt-1" style="font-weight: 800; font-size: 20px;">{{this.name}}</div>
+          {{#if this.Comments.length}}
+          <div class="mt-1" style="font-size: 13px;"><i class="fa-solid fa-comments"></i>&nbsp;{{this.Comments.length}}
+          </div>
+          {{/if}}
         </div>
-        <div class="col-md-5" style="font-weight: 200; font-size: 15px;">
+        <div class="col-md-4" style="font-weight: 200; font-size: 15px;">
           {{this.description}}
         </div>
         <div class="col-md-1">
