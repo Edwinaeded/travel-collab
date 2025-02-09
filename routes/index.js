@@ -42,6 +42,9 @@ router.get('/collaborate', authenticated, userController.getCollaborate)
 router.post('/collaborate', authenticated, userController.postCollaborate)
 router.delete('/collaborate', authenticated, userController.deleteCollaborate)
 
+router.delete('/comments/:id', authenticated, destinationController.deleteComment)
+router.post('/comments', authenticated, destinationController.postComment)
+
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {
   if (req.method === 'GET' && req.path === '/trips') {

@@ -30,6 +30,18 @@ const destinationController = {
       req.flash('success_msg', `[ ${data.updatedDestination.name} ] has been updated successfully!`)
       return res.redirect(`/destinations/${data.updatedDestination.id}`)
     })
+  },
+  postComment: (req, res, next) => {
+    destinationServices.postComment(req, (err, data) => {
+      if (err) return next(err)
+      res.redirect(`/destinations/${data.destinationId}`)
+    })
+  },
+  deleteComment: (req, res, next) => {
+    destinationServices.deleteComment(req, (err, data) => {
+      if (err) return next(err)
+      res.redirect(`/destinations/${data.destinationId}`)
+    })
   }
 }
 
