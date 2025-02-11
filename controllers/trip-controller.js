@@ -38,7 +38,7 @@ const tripController = {
   getTrip: (req, res, next) => {
     tripServices.getTrip(req, (err, data) => {
       if (err) return next(err)
-      return res.render('trip', data)
+      return res.render('trip', { ...data, googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY })
     })
   },
   getSharedTrips: (req, res, next) => {
