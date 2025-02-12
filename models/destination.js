@@ -23,7 +23,9 @@ module.exports = (sequelize, DataTypes) => {
     endTime: DataTypes.TIME,
     cost: DataTypes.STRING,
     address: DataTypes.STRING,
-    image: DataTypes.STRING
+    image: DataTypes.STRING,
+    latitude: DataTypes.DECIMAL(10, 8),
+    longitude: DataTypes.DECIMAL(11, 8)
   }, {
     sequelize,
     modelName: 'Destination',

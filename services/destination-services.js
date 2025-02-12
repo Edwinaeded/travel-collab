@@ -2,6 +2,7 @@ const { Trip, Destination, User, Comment } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 const { dayInterval, timeToUtc } = require('../helpers/dayjs-helper')
 const { getUser } = require('../helpers/auth-helper')
+const { getGeoData } = require('../helpers/googleMaps-helper')
 
 const destinationServices = {
   getDestination: (req, callback) => {
@@ -42,13 +43,14 @@ const destinationServices = {
     const { name, date, startTime, endTime, cost, address, description, tripId } = req.body
     const { file } = req
     const user = getUser(req)
-    if (!name || !date || !startTime || !endTime) throw new Error('Please complete all required fields')
+    if (!name || !date || !startTime || !endTime || !address) throw new Error('Please complete all required fields')
 
     Promise.all([
       Trip.findByPk(tripId, { include: [{ model: User, as: 'Receivers' }] }),
-      localFileHandler(file)
+      localFileHandler(file),
+      getGeoData(address)
     ])
-      .then(([tripData, filePath]) => {
+      .then(([tripData, filePath, geoData]) => {
         if (!tripData) throw new Error("The trip doesn't exist!")
         const trip = tripData.toJSON()
         const isReceiver = trip.Receivers.some(r => r.id === user.id)
@@ -68,7 +70,9 @@ const destinationServices = {
           address,
           description,
           tripId,
-          image: filePath || null
+          image: filePath || null,
+          latitude: geoData.latitude,
+          longitude: geoData.longitude
         })
       })
       .then(newDestination => callback(null, { newDestination, tripId }))
@@ -117,7 +121,7 @@ const destinationServices = {
     const { file } = req
     const user = getUser(req)
 
-    if (!name || !date || !startTime || !endTime) throw new Error('Please complete all required fields')
+    if (!name || !date || !startTime || !endTime || !address) throw new Error('Please complete all required fields')
 
     Promise.all([
       Destination.findByPk(id),
@@ -136,6 +140,32 @@ const destinationServices = {
         const dayCount = dayInterval(trip.startDate, timeToUtc(date))
         if (dayCount < 1 || dayCount > tripDayCount) throw new Error('Selected date exceeds the travel period!')
 
+        //  確認地址是否更改
+        let latitude = destination.latitude
+        let longitude = destination.longitude
+        if (destination.address !== address) {
+          console.log('地址已變更，重新取得經緯度...')
+
+          return getGeoData(address)
+            .then(geoData => {
+              latitude = geoData.latitude
+              longitude = geoData.longitude
+              return destination.update({
+                name,
+                date,
+                startTime,
+                endTime,
+                cost,
+                address,
+                description,
+                tripId,
+                image: filePath || destination.image,
+                latitude,
+                longitude
+              })
+            })
+        }
+
         return destination.update({
           name,
           date,
@@ -145,7 +175,9 @@ const destinationServices = {
           address,
           description,
           tripId,
-          image: filePath || destination.image
+          image: filePath || destination.image,
+          latitude,
+          longitude
         })
       })
       .then(updatedDestination => callback(null, { updatedDestination: updatedDestination.toJSON() }))

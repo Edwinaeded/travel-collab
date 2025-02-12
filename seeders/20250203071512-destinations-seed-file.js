@@ -15,6 +15,8 @@ module.exports = {
         cost: '100yen',
         address: '1-1 Yoyogikamizonocho, Shibuya, Tokyo 151-8557日本',
         image: '/images/seed-photo/meiji-temple.jpg',
+        latitude: 35.67658062,
+        longitude: 139.69927225,
         created_at: new Date(),
         updated_at: new Date()
       },
@@ -28,19 +30,23 @@ module.exports = {
         cost: '2000yen~3000yen',
         address: '4 Chome Tsukiji, Chuo City, Tokyo 104-0045日本',
         image: '/images/seed-photo/sashimi.jpg',
+        latitude: 35.66520120,
+        longitude: 139.77078553,
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         trip_id: trips[0].id,
-        name: '秋葉原逛街',
+        name: '秋葉原扭蛋會館',
         description: '動漫周邊～電玩～～扭蛋!!',
         date: '2025-03-08',
         start_time: '15:00',
         end_time: '18:00',
         cost: 'limitless',
-        address: '1 Chome Sotokanda, Chiyoda City, Tokyo, 日本',
+        address: '日本〒101-0021 Tokyo, Chiyoda City, Sotokanda, 3 Chome−15−5 MNビル 1F',
         image: '',
+        latitude: 35.70197318,
+        longitude: 139.77119341,
         created_at: new Date(),
         updated_at: new Date()
       }
