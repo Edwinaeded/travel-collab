@@ -29,7 +29,6 @@
   {{/ifCond}}
 </div>
 
-
 {{>messages}}
 
 <!-- 天數tabs -->
@@ -43,36 +42,42 @@
   </ul>
 </div>
 
-{{!-- <!-- 載入google maps-->
+{{#if destinations}}
+<!-- 載入google maps-->
 <div id="map" class="mt-2 mb-2" style="height: 400px; width: 75%; margin: auto;"></div>
 <script>
   let map
+  let destinations = {{{json destinations}}}
   
   async function initMap() {
     const { Map } = await google.maps.importLibrary("maps")
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker")
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker")
 
     map = new Map(document.getElementById("map"), {
-      center: { lat: 25.033, lng: 121.564 },
+      center: { lat: Number(destinations[0].latitude), lng: Number(destinations[0].longitude)},
       zoom: 13,
       mapId: 'DEMO_MAP_ID'
     })
-    let latLng = new google.maps.LatLng(25.0397146, 121.5653771);
-    let marker = new AdvancedMarkerElement({
-      position: latLng,
-      map: map
-    })
-    let latLng2 = new google.maps.LatLng(25.0377146, 121.5653771);
-    let marker2 = new AdvancedMarkerElement({
-      position: latLng2,
-      map: map
-    })
+
+    for (let i = 0; i < destinations.length; i ++) {
+      const pinTextGlyph = new PinElement({ 
+        glyph: `${i + 1}`,
+        glyphColor: "white",
+        borderColor: "white"
+        })
+      new AdvancedMarkerElement({
+        position: { lat: Number(destinations[i].latitude), lng: Number(destinations[i].longitude) },
+        content: pinTextGlyph.element,
+        map: map
+      }) 
+    }
   }
 
   initMap()
 </script>
 <script async src="https://maps.googleapis.com/maps/api/js?key={{googleMapsApiKey}}&loading=async&callback=initMap">
-</script> --}}
+</script>
+{{/if}}
 
 <!-- Destinations -->
 <div class="container">

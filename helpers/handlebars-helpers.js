@@ -14,5 +14,8 @@ module.exports = {
   relativeTimeFromNow: rawTime => dayjs(rawTime).fromNow(),
   ifCond: function (a, b, options) {
     return a === b ? options.fn(this) : options.inverse(this)
+  },
+  json: content => {
+    return JSON.stringify(content)
   }
 }
