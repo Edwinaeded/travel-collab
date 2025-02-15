@@ -108,6 +108,7 @@ const tripServices = {
   },
   getTrip: async (req, callback) => {
     const { id } = req.params
+    const isMap = Boolean(req.query.map) || false
     const currentDay = Number(req.query.day) || 1
     const user = getUser(req)
 
@@ -143,38 +144,42 @@ const tripServices = {
         count: i + 1
       }))
 
-      // 處理Direction API 需求資料
-      if (data.length > 0) {
-        const waypointsForDirection = []
-        for (let i = 1; i < data.length - 1; i++) {
-          waypointsForDirection.push(`${data[i].latitude},${data[i].longitude}`)
-        }
-        const googleMapsParams = {
-          origin: `${data[0].latitude},${data[0].longitude}`,
-          destination: `${data[data.length - 1].latitude},${data[data.length - 1].longitude}`,
-          waypoints: waypointsForDirection,
-          travelMode: 'DRIVING'
-        }
-        const routeResults = await getGoogleMapsRoute(googleMapsParams)
+      // 判斷是否開啟地圖顯示功能
+      if (isMap) {
+        if (data.length === 0) throw new Error("This day doesn't have any destinations yet!")
+        // 處理Direction API 需求資料
+        if (data.length > 0) {
+          const waypointsForDirection = []
+          for (let i = 1; i < data.length - 1; i++) {
+            waypointsForDirection.push(`${data[i].latitude},${data[i].longitude}`)
+          }
+          const googleMapsParams = {
+            origin: `${data[0].latitude},${data[0].longitude}`,
+            destination: `${data[data.length - 1].latitude},${data[data.length - 1].longitude}`,
+            waypoints: waypointsForDirection,
+            travelMode: 'DRIVING'
+          }
+          const routeResults = await getGoogleMapsRoute(googleMapsParams)
 
-        // 將Direction API 取得的距離與行徑時間資料加入data
-        data = data.map((d, i) => ({
-          ...d,
-          distanceToNext: routeResults.routes[0].legs[i] ? routeResults.routes[0].legs[i].distance.text : null,
-          timeToNext: routeResults.routes[0].legs[i] ? routeResults.routes[0].legs[i].duration.text : null
-        }))
+          // 將Direction API 取得的距離與預估行駛時間資料加入data
+          data = data.map((d, i) => ({
+            ...d,
+            distanceToNext: routeResults.routes[0].legs[i] ? routeResults.routes[0].legs[i].distance.text : null,
+            timeToNext: routeResults.routes[0].legs[i] ? routeResults.routes[0].legs[i].duration.text : null
+          }))
 
-        // 處理前端 Direction.renderer 路徑渲染需求資料
-        const waypointsForRenderer = []
-        for (let i = 1; i < data.length - 1; i++) {
-          waypointsForRenderer.push({ location: { lat: Number(`${data[i].latitude}`), lng: Number(`${data[i].longitude}`) } })
-        }
-        const directionRendererReq = {
-          ...googleMapsParams,
-          waypoints: waypointsForRenderer
-        }
+          // 處理前端 Direction.renderer 路徑渲染需求資料
+          const waypointsForRenderer = []
+          for (let i = 1; i < data.length - 1; i++) {
+            waypointsForRenderer.push({ location: { lat: Number(`${data[i].latitude}`), lng: Number(`${data[i].longitude}`) } })
+          }
+          const directionRendererReq = {
+            ...googleMapsParams,
+            waypoints: waypointsForRenderer
+          }
 
-        return callback(null, { trip, destinations: data, days, currentDay, routeResults, directionRendererReq })
+          return callback(null, { trip, destinations: data, days, currentDay, routeResults, directionRendererReq })
+        }
       }
       return callback(null, { trip, destinations: data, days, currentDay })
     } catch (err) {

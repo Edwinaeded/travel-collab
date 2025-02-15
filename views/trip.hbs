@@ -42,7 +42,24 @@
   </ul>
 </div>
 
+<!-- Button for Google Maps-->
 {{#if destinations}}
+  {{#if routeResults}}
+  <div class="container mt-3 d-flex justify-content-end" style="width: 85%;">
+    <a href="/trips/{{trip.id}}?day={{currentDay}}" class="btn btn-danger"
+      style="border-radius: 50px; font-size: 13px;"><i class="fa-solid fa-eye-slash"></i> 關閉路徑與預估行駛時間
+    </a>
+  </div>
+  {{else}}
+  <div class="container mt-3 d-flex justify-content-end" style="width: 85%;">
+    <a href="/trips/{{trip.id}}?day={{currentDay}}&map=true" class="btn btn-outline-danger"
+      style="border-radius: 50px; font-size: 13px;"><i class="fa-solid fa-eye"></i> 顯示路徑與預估行駛時間
+    </a>
+  </div>
+  {{/if}}
+{{/if}}
+
+{{#if routeResults}}
 <!-- Google Maps-->
 <div id="map" class="mt-2 mb-2" style="height: 400px; width: 75%; margin: auto;"></div>
 <script>
@@ -51,6 +68,7 @@
   let routeResults = {{{json routeResults}}}
   let directionRendererReq = {{{json directionRendererReq}}}
   
+  // initialize Google Maps
   async function initMap() {
     const { Map } = await google.maps.importLibrary("maps")
     const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker")
@@ -70,7 +88,6 @@
       zoom: 13,
       mapId: 'Travel_Lab_Map'
     })
-    directionsRenderer.setMap(map)
 
     // Display Google Maps markers 
     for (let i = 0; i < destinations.length; i ++) {
@@ -87,13 +104,14 @@
     }
 
     // Render map routes
+    directionsRenderer.setMap(map)
     if (routeResults && routeResults.routes.length !== 0) {
       directionsService.route(directionRendererReq, (result, status) => {
         if (status === "OK") {
           directionsRenderer.setDirections(result)
           console.log("✅ 成功渲染路線！")
         } else {
-          console.error(`❌ Directions API 請求失敗: ${status}`)
+          console.error(`❌ Directions API 路線渲染請求失敗: ${status}`)
         }
       })
     }  
@@ -135,7 +153,7 @@
       </div>
     </div>
     {{#if this.timeToNext}}
-    <div style="width: 55%; margin: auto; color: #777777;">
+    <div style="width: 55%; margin: auto; color: #dc3545;">
       <div>┋</div>
       <div>┋ <i class="fa-solid fa-car-side"></i> {{this.timeToNext}} 〚 {{this.distanceToNext}} 〛</div>
       <div>┋</div>
