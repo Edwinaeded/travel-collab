@@ -7,7 +7,7 @@ const userController = require('../controllers/user-controller')
 const adminController = require('../controllers/admin-controller')
 const upload = require('../middlewares/multer')
 const passport = require('../middlewares/passport')
-const { authenticated } = require('../middlewares/auth')
+const { authenticated, adminAuthenticated } = require('../middlewares/auth')
 
 router.get('/signup', userController.getSignUp)
 router.post('/signup', userController.postSignUp)
@@ -46,7 +46,8 @@ router.delete('/collaborate', authenticated, userController.deleteCollaborate)
 router.delete('/comments/:id', authenticated, destinationController.deleteComment)
 router.post('/comments', authenticated, destinationController.postComment)
 
-router.get('/admin/users', adminController.getUsers)
+router.get('/admin/users', adminAuthenticated, adminController.getUsers)
+router.put('/admin/:id/isAdmin', adminAuthenticated, adminController.putUser)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {
