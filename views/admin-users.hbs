@@ -1,0 +1,42 @@
+<!-- Title -->
+<div class="container mt-3" style="display: flex; justify-content: space-between; align-items: center;">
+  <div style="display: inline-block; font-size: 25px; font-weight: 700;"><i class="fa-solid fa-gear"></i>&nbsp;USERS LIST</div>
+</div>
+
+{{> messages}}
+
+<!-- Users -->
+<table class="table table-hover caption-top mt-4" style="width: 80%; margin: auto;">
+  <caption>Number of users : {{users.length}}</caption>
+  <thead class="table-secondary">
+    <tr>
+      <th scope="col" style="text-align: center;">#</th>
+      <th scope="col" style="text-align: center;">User</th>
+      <th scope="col" style="text-align: center;">Email</th>
+      <th scope="col" style="text-align: center;">Share ID</th>
+      <th scope="col" style="text-align: center;">Role</th>
+      <th scope="col" style="text-align: center;"><i class="fa-solid fa-gear"></i></th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {{#each users}}
+    <tr>
+      <th scope="row" style="text-align: center; vertical-align: middle;">{{this.id}}</th>
+      <td>
+        <div class="d-flex align-items-center" style="justify-content:center;">
+          <img src="{{this.image}}" style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%; margin-right: 5px;">
+          <div>{{this.name}}</div>
+        </div>
+      </td>
+      <td style="text-align: center; vertical-align: middle;">{{this.email}}</td>
+      <td style="text-align: center; vertical-align: middle;">{{this.shareId}}</td>
+      <td style="text-align: center; vertical-align: middle;">{{#if this.isAdmin}}Admin{{else}}User{{/if}}</td>
+      <td style="text-align: center; vertical-align: middle;">
+        <form action="/admin/{{this.id}}/isAdmin?_method=PUT" method="POST">
+          <button type="submit" class="btn btn-link">{{#if this.isAdmin}}Set as User{{else}}Set as Admin{{/if}}</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -4,6 +4,7 @@ const { generalErrorHandler } = require('../middlewares/error-handler')
 const tripController = require('../controllers/trip-controller')
 const destinationController = require('../controllers/destination-controller')
 const userController = require('../controllers/user-controller')
+const adminController = require('../controllers/admin-controller')
 const upload = require('../middlewares/multer')
 const passport = require('../middlewares/passport')
 const { authenticated } = require('../middlewares/auth')
@@ -44,6 +45,8 @@ router.delete('/collaborate', authenticated, userController.deleteCollaborate)
 
 router.delete('/comments/:id', authenticated, destinationController.deleteComment)
 router.post('/comments', authenticated, destinationController.postComment)
+
+router.get('/admin/users', adminController.getUsers)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {
