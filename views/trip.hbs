@@ -44,7 +44,7 @@
 
 <!-- Button for Google Maps-->
 {{#if destinations}}
-  {{#if routeResults}}
+  {{#if isMap}}
   <div class="container mt-3 d-flex justify-content-end" style="width: 85%;">
     <a href="/trips/{{trip.id}}?day={{currentDay}}" class="btn btn-danger"
       style="border-radius: 50px; font-size: 13px;"><i class="fa-solid fa-eye-slash"></i> 關閉路徑與預估行駛時間
@@ -59,15 +59,17 @@
   {{/if}}
 {{/if}}
 
-{{#if routeResults}}
+{{#if isMap}}
 <!-- Google Maps-->
 <div id="map" class="mt-2 mb-2" style="height: 400px; width: 75%; margin: auto;"></div>
 <script>
   let map
   let destinations = {{{json destinations}}}
-  let routeResults = {{{json routeResults}}}
-  let directionRendererReq = {{{json directionRendererReq}}}
-  
+  {{#if routeResults}}
+  let routeResults = {{{ json routeResults }}}
+  let directionRendererReq = {{{ json directionRendererReq }}}
+  {{/if}}
+
   // initialize Google Maps
   async function initMap() {
     const { Map } = await google.maps.importLibrary("maps")
@@ -102,20 +104,24 @@
         map: map
       }) 
     }
+    console.log("✅ 初始化地圖成功！")
 
     // Render map routes
-    directionsRenderer.setMap(map)
-    if (routeResults && routeResults.routes.length !== 0) {
-      directionsService.route(directionRendererReq, (result, status) => {
-        if (status === "OK") {
-          directionsRenderer.setDirections(result)
-          console.log("✅ 成功渲染路線！")
-        } else {
-          console.error(`❌ Directions API 路線渲染請求失敗: ${status}`)
-        }
-      })
-    }  
+    if (destinations.length > 1) {
+      directionsRenderer.setMap(map)
+      if (routeResults && routeResults.routes.length !== 0) {
+        directionsService.route(directionRendererReq, (result, status) => {
+          if (status === "OK") {
+            directionsRenderer.setDirections(result)
+            console.log("✅ 成功渲染路線！")
+          } else {
+            console.error(`❌ Directions API 路線渲染請求失敗: ${status}`)
+          }
+        })
+      }  
+    }
   }
+
   initMap()
 </script>
 <script async src="https://maps.googleapis.com/maps/api/js?key={{googleMapsApiKey}}&loading=async&callback=initMap">

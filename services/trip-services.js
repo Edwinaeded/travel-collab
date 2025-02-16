@@ -16,7 +16,8 @@ const tripServices = {
       where: { userId: user.id },
       raw: true,
       limit,
-      offset
+      offset,
+      order: [['startDate'], ['endDate']]
     })
       .then(trips => {
         const pagination = getPagination(trips.count, limit, offset)
@@ -148,7 +149,7 @@ const tripServices = {
       if (isMap) {
         if (data.length === 0) throw new Error("This day doesn't have any destinations yet!")
         // 處理Direction API 需求資料
-        if (data.length > 0) {
+        if (data.length > 1) {
           const waypointsForDirection = []
           for (let i = 1; i < data.length - 1; i++) {
             waypointsForDirection.push(`${data[i].latitude},${data[i].longitude}`)
@@ -178,10 +179,10 @@ const tripServices = {
             waypoints: waypointsForRenderer
           }
 
-          return callback(null, { trip, destinations: data, days, currentDay, routeResults, directionRendererReq })
+          return callback(null, { trip, destinations: data, days, currentDay, routeResults, directionRendererReq, isMap })
         }
       }
-      return callback(null, { trip, destinations: data, days, currentDay })
+      return callback(null, { trip, destinations: data, days, currentDay, isMap })
     } catch (err) {
       callback(err)
     }
@@ -201,6 +202,8 @@ const tripServices = {
           ...trip.toJSON(),
           description: trip.toJSON().description.substring(0, 50)
         }))
+        // 使用.sort()按日期升冪排序
+        tripsData.sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
         const tripsDataSlice = tripsData.slice(offset, offset + 8)
         return callback(null, { trips: tripsDataSlice, ...pagination })
       })
