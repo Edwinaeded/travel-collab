@@ -11,7 +11,8 @@
   <thead class="table-secondary">
     <tr>
       <th scope="col" style="text-align: center;">#</th>
-      <th scope="col" style="text-align: center;">User</th>
+      <th scope="col" style="text-align: center;">Image</th>
+      <th scope="col" style="text-align: center;">Name</th>
       <th scope="col" style="text-align: center;">Email</th>
       <th scope="col" style="text-align: center;">Share ID</th>
       <th scope="col" style="text-align: center;">Role</th>
@@ -22,12 +23,8 @@
     {{#each users}}
     <tr>
       <th scope="row" style="text-align: center; vertical-align: middle;">{{this.id}}</th>
-      <td>
-        <div class="d-flex align-items-center" style="justify-content:center;">
-          <img src="{{this.image}}" style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%; margin-right: 5px;">
-          <div>{{this.name}}</div>
-        </div>
-      </td>
+      <td style="text-align: center; vertical-align: middle;"><img src="{{this.image}}" style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%;"></td>
+      <td style="text-align: center; vertical-align: middle;">{{this.name}}</td>
       <td style="text-align: center; vertical-align: middle;">{{this.email}}</td>
       <td style="text-align: center; vertical-align: middle;">{{this.shareId}}</td>
       <td style="text-align: center; vertical-align: middle;">{{#if this.isAdmin}}Admin{{else}}User{{/if}}</td>
