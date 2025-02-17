@@ -9,6 +9,7 @@ const userServices = {
     const { name, email, password, confirmPassword, shareId } = req.body
     if (!name || !email || !password || !confirmPassword || !shareId) throw new Error('Please complete all required fields')
     if (password !== confirmPassword) throw new Error('Passwords do not match!')
+    const defaultImg = ['user-root', 'user1', 'user2', 'user3']
 
     Promise.all([
       User.findOne({ where: { email } }),
@@ -24,7 +25,8 @@ const userServices = {
           name,
           email,
           password: hash,
-          shareId
+          shareId,
+          image: `/images/seed-photo/${defaultImg[Math.floor(Math.random() * 4)]}.svg`
         })
       })
       .then(newUser => callback(null, { newUser }))
