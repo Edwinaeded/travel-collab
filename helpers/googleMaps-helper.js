@@ -5,7 +5,7 @@ const getGeoData = async function (address) {
     const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
       params: {
         address,
-        key: process.env.GOOGLE_MAPS_API_KEY
+        key: process.env.GOOGLE_MAPS_API_KEY_BACKEND
       }
     })
     const geoData = response.data
@@ -31,7 +31,7 @@ const getGoogleMapsRoute = async function (req) {
     const params = {
       origin: req.origin,
       destination: req.destination,
-      key: process.env.GOOGLE_MAPS_API_KEY
+      key: process.env.GOOGLE_MAPS_API_KEY_BACKEND
     }
     if (req.waypoints && req.waypoints.length > 0) {
       params.waypoints = req.waypoints.join('|')

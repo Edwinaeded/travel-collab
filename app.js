@@ -11,7 +11,7 @@ const { getUser } = require('./helpers/auth-helper')
 const router = require('./routes')
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
 const hbs = create({ extname: '.hbs', helpers: handlebarsHelpers })
 app.engine('.hbs', hbs.engine)
