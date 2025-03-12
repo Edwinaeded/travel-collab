@@ -6,114 +6,128 @@ const { getUser } = require('../helpers/auth-helper')
 const { getGoogleMapsRoute } = require('../helpers/googleMaps-helper')
 
 const tripServices = {
-  getTrips: (req, callback) => {
-    const user = getUser(req)
-    const limit = 8
-    const page = Number(req.query.page) || 1
-    const offset = (page - 1) * limit
+  getTrips: async (req, callback) => {
+    try {
+      const user = getUser(req)
+      const limit = 8
+      const page = Number(req.query.page) || 1
+      const offset = (page - 1) * limit
 
-    Trip.findAndCountAll({
-      where: { userId: user.id },
-      raw: true,
-      limit,
-      offset,
-      order: [['startDate'], ['endDate']]
-    })
-      .then(trips => {
-        const pagination = getPagination(trips.count, limit, offset)
-        const data = trips.rows.map(trip => ({
-          ...trip,
-          description: trip.description.substring(0, 50)
-        }))
-        callback(null, { trips: data, ...pagination })
+      const trips = await Trip.findAndCountAll({
+        where: { userId: user.id },
+        raw: true,
+        limit,
+        offset,
+        order: [['startDate'], ['endDate']]
       })
-      .catch(err => callback(err))
+
+      const pagination = getPagination(trips.count, limit, offset)
+      const data = trips.rows.map(trip => ({
+        ...trip,
+        description: trip.description.substring(0, 50)
+      }))
+
+      return callback(null, { trips: data, ...pagination })
+    } catch (err) {
+      return callback(err)
+    }
   },
-  postTrip: (req, callback) => {
-    const { name, startDate, endDate, description } = req.body
-    const { file } = req
-    const user = getUser(req)
-    if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
+  postTrip: async (req, callback) => {
+    try {
+      const { name, startDate, endDate, description } = req.body
+      const { file } = req
+      const user = getUser(req)
+      if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
 
-    localFileHandler(file)
-      .then(filePath => {
-        return Trip.create({
-          name,
-          startDate,
-          endDate,
-          description,
-          image: filePath || null,
-          userId: user.id
-        })
+      const filePath = await localFileHandler(file)
+      const newTrip = await Trip.create({
+        name,
+        startDate,
+        endDate,
+        description,
+        image: filePath || null,
+        userId: user.id
       })
-      .then(newTrip => callback(null, { newTrip, name }))
-      .catch(err => callback(err))
+
+      return callback(null, { newTrip, name })
+    } catch (err) {
+      return callback(err)
+    }
   },
-  editTrip: (req, callback) => {
-    const { id } = req.params
-    const user = getUser(req)
+  editTrip: async (req, callback) => {
+    try {
+      const { id } = req.params
+      const user = getUser(req)
 
-    Trip.findByPk(id, {
-      include: [{ model: User, as: 'Receivers' }]
-    })
-      .then(tripData => {
-        if (!tripData) throw new Error("The trip doesn't exist!")
-        const trip = tripData.toJSON()
-        const isReceiver = trip.Receivers.some(r => r.id === user.id)
-        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
-
-        callback(null, { trip })
+      const tripData = await Trip.findByPk(id, {
+        include: [{ model: User, as: 'Receivers' }]
       })
-      .catch(err => callback(err))
+      if (!tripData) throw new Error("The trip doesn't exist!")
+      const trip = tripData.toJSON()
+
+      const isReceiver = trip.Receivers.some(r => r.id === user.id)
+      if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
+
+      return callback(null, { trip })
+    } catch (err) {
+      return callback(err)
+    }
   },
-  putTrip: (req, callback) => {
-    const { id } = req.params
-    const { name, startDate, endDate, description } = req.body
-    const { file } = req
-    const user = getUser(req)
+  putTrip: async (req, callback) => {
+    try {
+      const { id } = req.params
+      const { name, startDate, endDate, description } = req.body
+      const { file } = req
+      const user = getUser(req)
 
-    if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
+      if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
 
-    Promise.all([
-      localFileHandler(file),
-      Trip.findByPk(id, { include: [{ model: User, as: 'Receivers' }] })
-    ])
-      .then(([filePath, tripData]) => {
-        if (!tripData) throw new Error("The trip doesn't exist!")
-        const trip = tripData.toJSON()
-        const isReceiver = trip.Receivers.some(r => r.id === user.id)
-        if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
-        return tripData.update({
-          name,
-          startDate,
-          endDate,
-          description,
-          image: filePath || trip.image
-        })
+      const [filePath, tripData] = await Promise.all([
+        localFileHandler(file),
+        Trip.findByPk(id, { include: [{ model: User, as: 'Receivers' }] })
+      ])
+      if (!tripData) throw new Error("The trip doesn't exist!")
+      const trip = tripData.toJSON()
+
+      const isReceiver = trip.Receivers.some(r => r.id === user.id)
+      if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
+
+      const updatedTrip = await tripData.update({
+        name,
+        startDate,
+        endDate,
+        description,
+        image: filePath || trip.image
       })
-      .then(trip => callback(null, { trip }))
-      .catch(err => callback(err))
+
+      return callback(null, { updatedTrip })
+    } catch (err) {
+      return callback(err)
+    }
   },
-  deleteTrip: (req, callback) => {
-    const { id } = req.params
-    const user = getUser(req)
+  deleteTrip: async (req, callback) => {
+    try {
+      const { id } = req.params
+      const user = getUser(req)
 
-    Trip.findByPk(id)
-      .then(trip => {
-        if (!trip) throw new Error("The trip doesn't exist!")
-        if (trip.userId !== user.id) throw new Error('Permission denied!')
-        return trip.destroy()
-      })
-      .then(deletedTrip => callback(null, { deletedTrip }))
-      .catch(err => callback(err))
+      const trip = await Trip.findByPk(id)
+      if (!trip) throw new Error("The trip doesn't exist!")
+      if (trip.userId !== user.id) throw new Error('Permission denied!')
+
+      const deletedTrip = await trip.destroy()
+
+      return callback(null, { deletedTrip })
+    } catch (err) {
+      return callback(err)
+    }
   },
   getTrip: async (req, callback) => {
-    const { id } = req.params
-    const isMap = Boolean(req.query.map) || false
-    const currentDay = Number(req.query.day) || 1
-    const user = getUser(req)
-
     try {
+      const { id } = req.params
+      const isMap = Boolean(req.query.map) || false
+      const currentDay = Number(req.query.day) || 1
+      const user = getUser(req)
+
       const tripData = await Trip.findByPk(id, {
         include: [
           { model: User, as: 'Sharers' },
@@ -122,6 +136,7 @@ const tripServices = {
       })
       if (!tripData) throw new Error("The trip doesn't exist!")
       const trip = tripData.toJSON()
+
       const isReceiver = trip.Receivers.some(r => r.id === user.id)
       if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')
 
@@ -184,30 +199,34 @@ const tripServices = {
       }
       return callback(null, { trip, destinations: data, days, currentDay, isMap })
     } catch (err) {
-      callback(err)
+      return callback(err)
     }
   },
-  getSharedTrips: (req, callback) => {
-    const user = getUser(req)
-    const limit = 8
-    const page = Number(req.query.page) || 1
-    const offset = (page - 1) * limit
+  getSharedTrips: async (req, callback) => {
+    try {
+      const user = getUser(req)
+      const limit = 8
+      const page = Number(req.query.page) || 1
+      const offset = (page - 1) * limit
 
-    User.findByPk(user.id, {
-      include: [{ model: Trip, as: 'ReceivedTrips' }]
-    })
-      .then(user => {
-        const pagination = getPagination(user.ReceivedTrips.length, limit, offset)
-        const tripsData = user.ReceivedTrips.map(trip => ({
-          ...trip.toJSON(),
-          description: trip.toJSON().description.substring(0, 50)
-        }))
-        // 使用.sort()按日期升冪排序
-        tripsData.sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
-        const tripsDataSlice = tripsData.slice(offset, offset + 8)
-        return callback(null, { trips: tripsDataSlice, ...pagination })
+      const userData = await User.findByPk(user.id, {
+        include: [{ model: Trip, as: 'ReceivedTrips' }]
       })
-      .catch(err => callback(err))
+
+      const pagination = getPagination(userData.ReceivedTrips.length, limit, offset)
+      const tripsData = userData.ReceivedTrips.map(trip => ({
+        ...trip.toJSON(),
+        description: trip.toJSON().description.substring(0, 50)
+      }))
+
+      // 使用.sort()按日期升冪排序
+      tripsData.sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+      const tripsDataSlice = tripsData.slice(offset, offset + 8)
+
+      return callback(null, { trips: tripsDataSlice, ...pagination })
+    } catch (err) {
+      return callback(err)
+    }
   }
 }
 

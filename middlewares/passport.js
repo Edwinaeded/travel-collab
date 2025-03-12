@@ -6,30 +6,32 @@ const bcrypt = require('bcryptjs')
 passport.use(new LocalStrategy({
   usernameField: 'email',
   passReqToCallback: true
-}, (req, email, password, done) => {
-  User.findOne({ where: { email } })
-    .then(user => {
-      if (!user) return done(null, false, req.flash('error_msg', 'Incorrect account or password!'))
-      bcrypt.compare(password, user.password)
-        .then(isMatch => {
-          if (!isMatch) return done(null, false, req.flash('error_msg', 'Incorrect account or password!'))
-          return done(null, user)
-        })
-        .catch(err => done(err))
-    })
-    .catch(err => done(err))
+}, async (req, email, password, done) => {
+  try {
+    const user = await User.findOne({ where: { email } })
+    if (!user) return done(null, false, req.flash('error_msg', 'Incorrect account or password!'))
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) return done(null, false, req.flash('error_msg', 'Incorrect account or password!'))
+
+    return done(null, user)
+  } catch (err) {
+    return done(err)
+  }
 }))
 
 passport.serializeUser((user, done) => {
-  done(null, user.id)
+  return done(null, user.id)
 })
 
-passport.deserializeUser((id, done) => {
-  User.findByPk(id)
-    .then(user => {
-      user = user.toJSON()
-      return done(null, user)
-    })
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findByPk(id)
+
+    return done(null, user ? user.toJSON() : null)
+  } catch (err) {
+    return done(err)
+  }
 })
 
 module.exports = passport

@@ -102,7 +102,6 @@
         map: map
       }) 
     }
-    console.log("✅ 初始化地圖成功！")
 
     // Render map routes
     if (destinations.length > 1) {
@@ -111,9 +110,8 @@
         directionsService.route(directionRendererReq, (result, status) => {
           if (status === "OK") {
             directionsRenderer.setDirections(result)
-            console.log("✅ 成功渲染路線！")
           } else {
-            console.error(`❌ Directions API 路線渲染請求失敗: ${status}`)
+            console.error(`Directions API 路線渲染請求失敗: ${status}`)
           }
         })
       }  
