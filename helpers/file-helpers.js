@@ -12,6 +12,15 @@ const localFileHandler = file => {
   })
 }
 
+const S3FileHandler = file => {
+  return new Promise((resolve, reject) => {
+    if (!file) return resolve(null)
+    if (file.location) return resolve(file.location)
+    return reject(new Error('Failed to get file URL from S3'))
+  })
+}
+
 module.exports = {
-  localFileHandler
+  localFileHandler,
+  S3FileHandler
 }

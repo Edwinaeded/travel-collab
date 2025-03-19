@@ -1,9 +1,10 @@
 const { Trip, Destination, User, Comment } = require('../models')
-const { localFileHandler } = require('../helpers/file-helpers')
 const { getPagination } = require('../helpers/pagination-helpers')
 const { dayInterval, dayAdd } = require('../helpers/dayjs-helper')
 const { getUser } = require('../helpers/auth-helper')
 const { getGoogleMapsRoute } = require('../helpers/googleMaps-helper')
+const { localFileHandler, S3FileHandler } = require('../helpers/file-helpers')
+const FileHandler = process.env.NODE_ENV === 'production' ? S3FileHandler : localFileHandler
 
 const tripServices = {
   getTrips: async (req, callback) => {
@@ -39,7 +40,7 @@ const tripServices = {
       const user = getUser(req)
       if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
 
-      const filePath = await localFileHandler(file)
+      const filePath = await FileHandler(file)
       const newTrip = await Trip.create({
         name,
         startDate,
@@ -83,7 +84,7 @@ const tripServices = {
       if (!name || !startDate || !endDate) throw new Error('Please complete all required fields')
 
       const [filePath, tripData] = await Promise.all([
-        localFileHandler(file),
+        FileHandler(file),
         Trip.findByPk(id, { include: [{ model: User, as: 'Receivers' }] })
       ])
       if (!tripData) throw new Error("The trip doesn't exist!")

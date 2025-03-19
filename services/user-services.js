@@ -2,7 +2,8 @@ const { Op } = require('sequelize')
 const { User, Trip, Share } = require('../models')
 const bcrypt = require('bcryptjs')
 const { getUser } = require('../helpers/auth-helper')
-const { localFileHandler } = require('../helpers/file-helpers')
+const { localFileHandler, S3FileHandler } = require('../helpers/file-helpers')
+const FileHandler = process.env.NODE_ENV === 'production' ? S3FileHandler : localFileHandler
 
 const userServices = {
   postSignUp: async (req, callback) => {
@@ -73,7 +74,7 @@ const userServices = {
       const [user, idUser, filePath] = await Promise.all([
         User.findByPk(id),
         User.findOne({ where: { shareId, id: { [Op.ne]: id } } }),
-        localFileHandler(file)
+        FileHandler(file)
       ])
       if (!user) throw new Error("User doesn't exist!")
       if (idUser) throw new Error('Share Id already exists!')

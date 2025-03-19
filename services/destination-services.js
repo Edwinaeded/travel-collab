@@ -1,8 +1,9 @@
 const { Trip, Destination, User, Comment } = require('../models')
-const { localFileHandler } = require('../helpers/file-helpers')
 const { dayInterval, timeToUtc } = require('../helpers/dayjs-helper')
 const { getUser } = require('../helpers/auth-helper')
 const { getGeoData } = require('../helpers/googleMaps-helper')
+const { localFileHandler, S3FileHandler } = require('../helpers/file-helpers')
+const FileHandler = process.env.NODE_ENV === 'production' ? S3FileHandler : localFileHandler
 
 const destinationServices = {
   getDestination: async (req, callback) => {
@@ -55,7 +56,7 @@ const destinationServices = {
 
       const [tripData, filePath = null, geoData = {}] = await Promise.all([
         Trip.findByPk(tripId, { include: [{ model: User, as: 'Receivers' }] }),
-        localFileHandler(file),
+        FileHandler(file),
         getGeoData(address)
       ])
 
@@ -143,7 +144,7 @@ const destinationServices = {
       const [destination, tripData, filePath] = await Promise.all([
         Destination.findByPk(id),
         Trip.findByPk(tripId, { include: { model: User, as: 'Receivers' } }),
-        localFileHandler(file)
+        FileHandler(file)
       ])
 
       if (!destination) throw new Error("The destination doesn't exist!")
