@@ -77,7 +77,7 @@ const tripServices = {
   putTrip: async (req, callback) => {
     try {
       const { id } = req.params
-      const { name, startDate, endDate, description } = req.body
+      const { name, startDate, endDate, description, updatedAt } = req.body
       const { file } = req
       const user = getUser(req)
 
@@ -89,6 +89,7 @@ const tripServices = {
       ])
       if (!tripData) throw new Error("The trip doesn't exist!")
       const trip = tripData.toJSON()
+      if (trip.updatedAt.toISOString() !== updatedAt) throw new Error('Data has been updated by another user. Please reload and try again!')
 
       const isReceiver = trip.Receivers.some(r => r.id === user.id)
       if (trip.userId !== user.id && !isReceiver) throw new Error('Permission denied!')

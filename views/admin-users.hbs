@@ -30,6 +30,7 @@
       <td style="text-align: center; vertical-align: middle;">{{#if this.isAdmin}}Admin{{else}}User{{/if}}</td>
       <td style="text-align: center; vertical-align: middle;">
         <form action="/admin/{{this.id}}/isAdmin?_method=PUT" method="POST">
+          <input type="hidden" id="updatedAt" name="updatedAt" value="{{formatISO this.updatedAt}}">
           <button type="submit" class="btn btn-link">{{#if this.isAdmin}}Set as User{{else}}Set as Admin{{/if}}</button>
         </form>
       </td>

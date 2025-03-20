@@ -11,6 +11,9 @@ module.exports = {
     const fullTime = dayjs(`2000-01-01T${rawTime}`)
     return fullTime.format('HH:mm')
   },
+  formatISO: time => {
+    return new Date(time).toISOString()
+  },
   relativeTimeFromNow: rawTime => dayjs(rawTime).fromNow(),
   ifCond: function (a, b, options) {
     return a === b ? options.fn(this) : options.inverse(this)

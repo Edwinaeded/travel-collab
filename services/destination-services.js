@@ -135,7 +135,7 @@ const destinationServices = {
   putDestination: async (req, callback) => {
     try {
       const { id } = req.params
-      const { name, date, startTime, endTime, cost, address, description, tripId } = req.body
+      const { name, date, startTime, endTime, cost, address, description, tripId, updatedAt } = req.body
       const { file } = req
       const user = getUser(req)
 
@@ -148,6 +148,7 @@ const destinationServices = {
       ])
 
       if (!destination) throw new Error("The destination doesn't exist!")
+      if (destination.updatedAt.toISOString() !== updatedAt) throw new Error('Data has been updated by another user. Please reload and try again!')
       if (!tripData) throw new Error("The trip doesn't exist!")
       const trip = tripData.toJSON()
       const isReceiver = trip.Receivers.some(r => r.id === user.id)
