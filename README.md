@@ -3,7 +3,7 @@
 ## Introduction
 **Travel-Collab** is a web application that allows multiple users to `collaboratively plan` and edit their travel itineraries. It integrates Google Maps to `visualize travel routes`, making trip planning easier and more intuitive.
 
-**✓ Get started with [Travel-Collab](travel-collab.ap-northeast-1.elasticbeanstalk.com)**
+**✓ Get started with [Travel-Collab](http://travel-collab.ap-northeast-1.elasticbeanstalk.com)**
 
 ## Test Accounts
 * Account 1 : root
@@ -22,8 +22,9 @@
 * Database : Uses Sequelize ORM to operate MySQL database on AWS RDS
 * Storage : Uploads images in AWS S3
 * External API : Uses Google Maps API for geocoding and route planning
-
-
+<div>
+<img width="90%" alt="System Architecture" src="/public/images/system architecture.svg"/>
+</div>
 
 ## Features
 ### Co-editing
