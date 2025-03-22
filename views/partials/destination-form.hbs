@@ -45,7 +45,9 @@
       <label for="description" style="font-size: 15px;">Description / Memo :</label>
     </div>
     <input type="hidden" id="tripId" name="tripId" value="{{trip.id}}">
+    {{#if destination}}
     <input type="hidden" id="updatedAt" name="updatedAt" value="{{formatISO destination.updatedAt}}">
+    {{/if}}
     <div class="d-flex justify-content-end">
       <button class="btn"
         style="background-color: #0077b6; color: white; font-size: 15px; font-weight: 300; border-radius: 100px;"

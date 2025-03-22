@@ -27,7 +27,9 @@
     <label class="input-group-text" for="image" style="font-size: 15px;">Image</label>
     <input type="file" class="form-control" id="image" name="image" placeholder="image">
   </div>
+  {{#if trip}}
   <input type="hidden" id="updatedAt" name="updatedAt" value="{{formatISO trip.updatedAt}}">
+  {{/if}}
   <div class="d-flex justify-content-end">
     <button class="btn" style="background-color: #0077b6; color: white; font-size: 15px; font-weight: 300; border-radius: 100px;"
       type="submit">{{#if trip}}UPDATE{{else}}START TRIP{{/if}} <i class="fa-solid fa-plane fa-rotate-by"
