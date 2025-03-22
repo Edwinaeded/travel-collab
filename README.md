@@ -20,7 +20,7 @@
 ## System Architecture
 * Application server : Runs Express.js (Node.js) on AWS EC2, managed by Elastic Beanstalk
 * Database : Uses Sequelize ORM to operate MySQL database on AWS RDS
-* Storage : Uploads images in AWS S3
+* Storage : Uploads images to AWS S3
 * External API : Uses Google Maps API for geocoding and route planning
 <div>
 <img width="90%" alt="System Architecture" src="/public/images/system architecture.svg"/>
@@ -45,6 +45,33 @@
 * Edit personal profile details (name / avatar / Share ID)
 
 ## Demo
+### 1. User authentication 
+   * Sign up, sign in, and log out
+<video src="https://github.com/user-attachments/assets/b80a417f-09b2-4592-8490-2d44de3f0b1d" controls width="700"></video>
+
+### 2. Trip and destination management
+   * Perform CRUD operations on trips and destinations
+   * Upload images to AWS S3
+   * Automatically geocode destination addresses using the Google Geocoding API
+<video src="https://github.com/user-attachments/assets/63eaf58c-2691-4cb2-b48e-16c27f11a815" controls width="700"></video>
+
+### 3. Itinerary visualization
+   * Display itinerary routes and calculate travel duration with Google Maps API
+   * Allow users to toggle Google Maps visibility
+<video src="https://github.com/user-attachments/assets/b372df7b-8b77-4312-b983-0b445476c8f2" controls width="700"></video>
+
+### 4. Co-editing
+   * Add, remove, and search for co-editors
+<video src="https://github.com/user-attachments/assets/2ce065ce-6f11-436e-a650-05fc3a11f199" controls width="700"></video>
+
+### 5. Concurrency control
+   * Implement optimistic locking to prevent data conflicts
+   * Display an error message when a concurrency conflict occurs
+<video src="https://github.com/user-attachments/assets/eb4f6653-12f0-4f78-b5cf-4fc80ef4b4fb" controls width="700"></video>
+
+### 6. Commenting feature
+   * Enable users to discuss and share feedback on destinations
+<video src="https://github.com/user-attachments/assets/937db808-6137-42ed-9514-a7295c77d168" controls width="700"></video>
 
 
 ## Installation
@@ -66,16 +93,23 @@ npm install
 ```
 4. Set up environment variables in a `.env` file (see `.env.example` for reference)
 
-5. Run database migration
+5. Create database  
+   Ensure your database server (e.g., MySQL) is running, then create a new database.  
+   If using Sequelize, you can run:
 ```
-npx sequelize db:migration
+npx sequelize db:create
+``` 
+
+6. Run migrations to set up the database schema
 ```
-6. (Optional) Seed database
+npx sequelize db:migrate
+```
+7. (Optional) Seed database
 ```
 npx sequelize db:seed:all
 ```
-7. Start the development server
+8. Start the development server
 ```
 npm run dev
 ```
-8. Access the application at http://localhost:3000
+9. Access the application at http://localhost:3000
