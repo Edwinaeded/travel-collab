@@ -34,4 +34,7 @@ jobs:
         run: npx sequelize-cli db:seed:all --env test
 
       - name: Run Tests
+        env:
+          NODE_ENV: test
+          SESSION_SECRET: "test-secret"
         run: npm test
