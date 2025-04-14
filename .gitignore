@@ -1,6 +1,7 @@
 node_modules/
 temp/
 upload/
+db/test.sqlite
 
 .DS_Store
 .env

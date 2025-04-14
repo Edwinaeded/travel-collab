@@ -7,7 +7,7 @@ module.exports = {
     dialect: 'mysql'
   },
   test: {
-    storage: ':memory:',
+    storage: 'db/test.sqlite',
     dialect: 'sqlite',
     logging: false
   },

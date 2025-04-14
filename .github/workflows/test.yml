@@ -21,10 +21,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup test DB (SQLite in-memory)
-        run: |
-          npx sequelize-cli db:migrate --env test
-          npx sequelize-cli db:seed:all --env test
+      - name: Create SQLite DB folder
+        run: mkdir -p db
+
+      - name: Clean old test DB
+        run: rm -f db/test.sqlite
+
+      - name: Run migrations
+        run: npx sequelize-cli db:migrate --env test
+
+      - name: Run seeders
+        run: npx sequelize-cli db:seed:all --env test
 
       - name: Run Tests
         run: npm test
