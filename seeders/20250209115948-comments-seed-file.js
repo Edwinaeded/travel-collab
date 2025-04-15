@@ -9,14 +9,14 @@ module.exports = {
       {
         user_id: users[0].id,
         destination_id: destinations[0].id,
-        text: '這個時間會塞車嗎？需不需要提早～',
+        text: 'Are we going to hit traffic? Should we head out early?',
         created_at: new Date(),
         updated_at: new Date()
       },
       {
         user_id: users[1].id,
         destination_id: destinations[0].id,
-        text: '好像有可能耶,我覺得可以提早個1hr',
+        text: 'I agree, lets head out early',
         created_at: new Date(),
         updated_at: new Date()
       }

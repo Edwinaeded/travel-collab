@@ -3,6 +3,31 @@ const { expect } = require('chai')
 const app = require('../app')
 const { Trip } = require('../models')
 
+describe('# Get Trip Test: GET /trips', function () {
+  const agent = request.agent(app)
+
+  it('#01 未登入者應被返回 /signin', async function () {
+    const getTripsRes = await agent
+      .get('/trips')
+      .expect(302)
+      .expect('Location', '/signin')
+  })
+
+  it('#02 登入者成功渲染 /trips', async function () {
+    await agent
+      .post('/signin')
+      .send('email=root@example.com&password=1234')
+      .expect(302)
+      .expect('Location', '/trips')
+
+    const getTripsRes = await agent
+      .get('/trips')
+      .expect(200)
+    expect(getTripsRes.text).to.include('My Trips')
+    expect(getTripsRes.text).to.include('Shared Trips')
+  })
+})
+
 describe('# Create Trip Test: POST /trips', function() {
   const agent = request.agent(app)
 
@@ -38,31 +63,6 @@ describe('# Create Trip Test: POST /trips', function() {
 
   after(async function() {
     await Trip.destroy({ where: { name: 'testPostTrip' }, force: true })
-  })
-})
-
-describe('# Get Trip Test: GET /trips', function() {
-  const agent = request.agent(app)
-
-  it('#01 未登入者應被返回 /signin', async function() {
-    const getTripsRes = await agent
-      .get('/trips')
-      .expect(302)
-      .expect('Location', '/signin')
-  })
-
-  it('#02 登入者成功渲染 /trips', async function() {
-    await agent
-      .post('/signin')
-      .send('email=root@example.com&password=1234')
-      .expect(302)
-      .expect('Location', '/trips')
-
-    const getTripsRes = await agent
-      .get('/trips')
-      .expect(200)
-    expect(getTripsRes.text).to.include('My Trips')
-    expect(getTripsRes.text).to.include('Shared Trips')
   })
 })
 

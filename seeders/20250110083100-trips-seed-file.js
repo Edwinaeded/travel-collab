@@ -6,40 +6,40 @@ module.exports = {
     const users = await queryInterface.sequelize.query('SELECT id FROM Users;', { type: queryInterface.sequelize.QueryTypes.SELECT })
     await queryInterface.bulkInsert('Trips', [
       {
-        name: '日本東京之旅',
+        name: 'Tokyo trip',
         start_date: '2025-03-08',
         end_date: '2025-03-12',
-        description: '第一次去日本東京，每個景點都來一點~~',
+        description: 'First time to Tokyo',
         created_at: new Date(),
         updated_at: new Date(),
         image: '/images/seed-photo/Japan-tokyo.jpg',
         user_id: users[0].id
       },
       {
-        name: '日本大阪生日之旅',
+        name: 'Birthday Journey : Osaka, Japan',
         start_date: '2025-04-13',
         end_date: '2025-04-18',
-        description: '去大阪過生日!!這趟旅程一定很好玩:)',
+        description: 'It will definitely be fun',
         created_at: new Date(),
         updated_at: new Date(),
         image: '/images/seed-photo/Japan-osaka.jpg',
         user_id: users[0].id
       },
       {
-        name: '泰國閨蜜之旅',
+        name: 'Go Thailand',
         start_date: '2025-05-10',
         end_date: '2025-05-17',
-        description: '終於一起出去玩,我們飛泰遠 泰好玩!',
+        description: "Girls' Trip, Finally going out together:)",
         created_at: new Date(),
         updated_at: new Date(),
         image: '/images/seed-photo/Thailand.jpg',
         user_id: users[0].id
       },
       {
-        name: '韓國Family Trip',
+        name: 'Family Trip : Korea',
         start_date: '2025-08-19',
         end_date: '2025-08-21',
-        description: '說好不吵架,尊重友善包容,絕對要吃爆韓國路邊攤',
+        description: 'Going all out on Korean street food stalls!',
         created_at: new Date(),
         updated_at: new Date(),
         image: '/images/seed-photo/Korea.jpg',
