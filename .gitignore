@@ -3,6 +3,10 @@ temp/
 upload/
 db/test.sqlite
 
+#覆蓋率相關
+.nyc_output/
+coverage/
+
 .DS_Store
 .env
 .idea
