@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: travel-collab-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment: 
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: travel_db
+      DB_USER: user
+      DB_PASSWORD: userpassword
+      SESSION_SECRET: docker_secret
+    volumes:
+      - .:/app
+    networks:
+      - travel-net
+
+  db:
+    image: mysql:8.0
+    container_name: travel-collab-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: travel_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - travel-net
+
+volumes:
+  mysql_data:
+
+networks:
+  travel-net:

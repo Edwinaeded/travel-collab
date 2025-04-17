@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+.env
+
+temp
+upload
+
+tests
+db/test.sqlite
+.github
+.nyc_output
+coverage
+
+.DS_Store
+.idea
