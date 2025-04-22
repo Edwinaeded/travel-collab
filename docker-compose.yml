@@ -17,6 +17,7 @@ services:
       SESSION_SECRET: docker_secret
     volumes:
       - .:/app
+      - /app/node_modules
     networks:
       - travel-net
 
