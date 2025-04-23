@@ -73,6 +73,31 @@
    * Enable users to discuss and share feedback on destinations
 <video src="https://github.com/user-attachments/assets/937db808-6137-42ed-9514-a7295c77d168" controls width="700"></video>
 
+## Quick start with Docker
+### Prerequisites
+- Ensure you have [Docker](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) installed.
+
+### Steps
+1. Clone the repository
+```
+git clone https://github.com/Edwinaeded/travel-collab.git 
+```
+2. Navigate to the project directory
+```
+cd travel-collab
+```
+3. Set up environment variables in a `.env` file (see `.env.example` for reference)
+
+4. Start the application using Docker
+```
+docker-compose up --build
+```
+5. Run database migrations and seed data
+```
+docker-compose exec app npx sequelize db:migrate
+docker-compose exec app npx sequelize db:seed:all
+```
+6. Access the application at http://localhost:3000
 
 ## Installation
 ### Prerequisites

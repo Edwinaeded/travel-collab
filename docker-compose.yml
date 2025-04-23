@@ -12,7 +12,7 @@ services:
       DB_HOST: db
       DB_PORT: 3306
       DB_NAME: travel_db
-      DB_USER: user
+      DB_USERNAME: user
       DB_PASSWORD: userpassword
       SESSION_SECRET: docker_secret
     volumes:
