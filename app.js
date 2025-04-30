@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const redis = require('redis')
 const { create } = require('express-handlebars')
 const flash = require('connect-flash')
 const session = require('express-session')
@@ -11,6 +12,7 @@ const { getUser } = require('./helpers/auth-helper')
 const router = require('./routes')
 
 const app = express()
+const client = redis.createClient()
 const port = process.env.PORT || 3000
 
 const hbs = create({ extname: '.hbs', helpers: handlebarsHelpers })
@@ -36,8 +38,23 @@ app.use((req, res, next) => {
 
 app.use(router)
 
-app.listen(port, () => {
-  console.log(`app is running on http://localhost:${port}`)
-})
+async function startServer () {
+  try {
+    // 開啟redis連線
+    await client.connect()
+    console.log('Redis connected')
+
+    // 綁定client供全域使用
+    app.locals.redisClient = client
+
+    // app啟動
+    app.listen(port, () => {
+      console.log(`app is running on http://localhost:${port}`)
+    })
+  } catch (err) {
+    console.error('Error starting server:', err)
+  }
+}
+startServer()
 
 module.exports = app

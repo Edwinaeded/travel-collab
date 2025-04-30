@@ -1,0 +1,50 @@
+{{> messages}}
+<div class="container d-flex" style="margin-top: 10px;">
+  <!-- 左側圖片區 -->
+  <div class="flex-shrink-0" style="margin-right: 25px; margin-top: 50px;">
+    <i class="fa-solid fa-robot fa-8x"></i>
+  </div>
+  
+  <!-- 對話框容器 -->
+  <div class="chat-container" id="chat-container">
+    <div class="chat-header">
+      <span>行程推薦小幫手</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="message ai-message">
+        您好！我是行程推薦小幫手小E，今天想去哪裡玩～有什麼可以幫您的嗎？
+      </div>
+      {{#each conversationHistory}}
+        {{#ifCond this.role 'assistant'}}
+        <div
+          class="message ai-message">
+          {{this.content}}
+        </div>
+        {{/ifCond}}
+        {{#ifCond this.role 'user'}}
+        <div class="message user-message">
+          {{this.content}}
+        </div>
+        {{/ifCond}}
+        {{#ifCond this.role 'system'}}
+        {{/ifCond}}
+      {{/each}}
+      <script>
+        // 自動滾動到最新訊息
+        function scrollToBottom() {
+          const chatMessages = document.getElementById('chat-messages');
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 頁面載入時執行
+        document.addEventListener('DOMContentLoaded', scrollToBottom);
+      </script>
+    </div>
+    <form action="/chatbot" method="POST">
+      <div class="chat-input">
+        <input type="text" id="message-input" name="messageInput" placeholder="輸入您的訊息...">
+        <button type="submit" id="send-button">發送</button>
+      </div>
+    </form>
+  </div>
+</div>
