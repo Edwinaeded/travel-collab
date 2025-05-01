@@ -12,7 +12,9 @@ const { getUser } = require('./helpers/auth-helper')
 const router = require('./routes')
 
 const app = express()
-const client = redis.createClient()
+const client = redis.createClient({
+  url: `redis://${process.env.REDIS_HOST || '127.0.0.1'}:${process.env.REDIS_PORT || 6379}`
+})
 const port = process.env.PORT || 3000
 
 const hbs = create({ extname: '.hbs', helpers: handlebarsHelpers })

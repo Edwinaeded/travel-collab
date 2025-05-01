@@ -8,6 +8,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
     environment: 
       DB_HOST: db
       DB_PORT: 3306
@@ -15,6 +16,8 @@ services:
       DB_USERNAME: user
       DB_PASSWORD: userpassword
       SESSION_SECRET: docker_secret
+      REDIS_HOST: redis 
+      REDIS_PORT: 6379
     volumes:
       - .:/app
       - /app/node_modules
@@ -34,6 +37,14 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - travel-net
+
+  redis:
+    image: redis:7.2
+    container_name: travel-collab-redis
+    ports:
+      - "6379:6379"
     networks:
       - travel-net
 
