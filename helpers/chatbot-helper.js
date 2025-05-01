@@ -5,9 +5,14 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const getChatbotResponse = async (req, res) => {
   try {
     const userId = getUser(req).id
+    const { messageInput, idempotencyKey } = req.body
+    if (!messageInput) throw new Error('請輸入問題')
 
     // 取用自app.js綁定全域的redis client
     const client = req.app.locals.redisClient
+
+    // 將冪等鎖uuid存入redis並設定過期時間為5分鐘
+    await client.set(`user:${userId}:idempotencyKey:${idempotencyKey}`, 'processing', { EX: 300 })
 
     // 取得使用者對話歷史
     const conversationHistoryRaw = await client.get(`user:${userId}:chat`)
@@ -23,7 +28,7 @@ const getChatbotResponse = async (req, res) => {
     if (conversationHistory.length > 20) throw new Error('超過使用次數上限,請試著從先前的對話中安排行程吧!')
 
     // 將使用者輸入的訊息加入對話歷史
-    conversationHistory.push({ role: 'user', content: req.body.messageInput })
+    conversationHistory.push({ role: 'user', content: messageInput })
 
     // 傳遞使用者輸入給機器人並獲得回答
     const response = await openai.responses.create({
@@ -44,9 +49,9 @@ const getChatbotResponse = async (req, res) => {
 
     // 將機器人回答加入對話歷史
     conversationHistory.push({ role: 'assistant', content: response.output_text })
-    // 將對話歷史存入redis並設定過期時間為60分鐘
-    await client.set(`user:${userId}:chat`, JSON.stringify(conversationHistory))
-    await client.expire(`user:${userId}:chat`, 3600)
+    // 將對話歷史存入redis並設定過期時間為60分鐘，並設定冪等鎖uuid為已完成
+    await client.set(`user:${userId}:chat`, JSON.stringify(conversationHistory), { EX: 3600 })
+    await client.set(`user:${userId}:idempotencyKey:${idempotencyKey}`, 'done', { EX: 300 })
 
     return conversationHistory
   } catch (err) {
