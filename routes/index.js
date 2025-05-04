@@ -5,6 +5,7 @@ const tripController = require('../controllers/trip-controller')
 const destinationController = require('../controllers/destination-controller')
 const userController = require('../controllers/user-controller')
 const adminController = require('../controllers/admin-controller')
+const chatbotController = require('../controllers/chatbot-controller')
 const upload = require('../middlewares/multer')
 const passport = require('../middlewares/passport')
 const { authenticated, adminAuthenticated } = require('../middlewares/auth')
@@ -49,6 +50,9 @@ router.post('/comments', authenticated, destinationController.postComment)
 
 router.get('/admin/users', adminAuthenticated, adminController.getUsers)
 router.put('/admin/:id/isAdmin', adminAuthenticated, adminController.putUser)
+
+router.get('/chatbot', authenticated, chatbotController.getChatbot)
+router.post('/chatbot', authenticated, chatbotController.postChatbot)
 
 // 設置fallback 並避免無限迴圈
 router.use((req, res) => {

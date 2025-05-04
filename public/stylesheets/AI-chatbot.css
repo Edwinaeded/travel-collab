@@ -1,0 +1,116 @@
+/* 懸浮按鈕樣式 */
+.chat-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background-color: #e83f27;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transition: transform 0.3s;
+}
+
+.chat-button:hover {
+  color: white;
+  text-decoration: none;
+  transform: scale(1.3);
+}
+
+/* 對話框容器 */
+.chat-container {
+  font-size: 12px;
+  bottom: 30px;
+  left: 30px;
+  width: 800px;
+  height: 550px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+  z-index: 1001;
+}
+
+.chat-header {
+  background-color: #E6CCB2;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  scroll-behavior: smooth;
+}
+
+.message {
+  margin-bottom: 15px;
+  max-width: 80%;
+  padding: 10px 15px;
+  border-radius: 18px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.user-message {
+  background-color: #7F5539;
+  color: white;
+  margin-left: auto;
+  border-bottom-right-radius: 5px;
+}
+
+.ai-message {
+  background-color: #e5e5ea;
+  color: black;
+  margin-right: auto;
+  border-bottom-left-radius: 5px;
+}
+
+.chat-input {
+  display: flex;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ddd;
+}
+
+#message-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 1em;
+}
+
+#send-button {
+  background-color: #E6CCB2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+}
+
+#send-button:hover {
+  background-color: #7F5539;
+}

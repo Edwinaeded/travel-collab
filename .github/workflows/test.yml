@@ -37,4 +37,5 @@ jobs:
         env:
           NODE_ENV: test
           SESSION_SECRET: "test-secret"
+          OPENAI_API_KEY: "FAKE_KEY_FOR_TESTING"
         run: npm test

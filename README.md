@@ -1,12 +1,13 @@
 # Travel-Collab
 
 ## Introduction
-**Travel-Collab** is a web application that allows multiple users to `collaboratively plan` and edit their travel itineraries. It integrates Google Maps to `visualize travel routes`, making trip planning easier and more intuitive.
+**Travel-Collab** is a web application that allows multiple users to `collaboratively plan` and edit their travel itineraries.<br>
+It integrates Google Maps for `intuitive route visualization` and OpenAI as a `smart trip assistant`, enabling a more personalized and efficient planning experience.
 
 **✓ Get started with [Travel-Collab](http://travel-collab.ap-northeast-1.elasticbeanstalk.com)**
 
 ## Test Accounts
-* Account 1 : root
+* Account 1 (admin) : root
   ```
   email: root@example.com
   password: 1234
@@ -18,12 +19,22 @@
   ```
 
 ## System Architecture
-* Application server : Runs Express.js (Node.js) on AWS EC2, managed by Elastic Beanstalk
-* Database : Uses Sequelize ORM to operate MySQL database on AWS RDS
-* Storage : Uploads images to AWS S3
-* External API : Uses Google Maps API for geocoding and route planning
+- **Application Server**  
+   Runs Express.js (Node.js) on AWS EC2, managed by Elastic Beanstalk
+- **Database** 
+   - **MySQL (AWS RDS):** Main relational database, accessed via Sequelize ORM
+   - **Redis**  
+  Used for two main purposes:  
+      1. **Chat context storage**: Temporarily stores each user's recent conversation history (1 hour) to support context-aware replies from the AI assistant, while reducing OpenAI API token usage
+      2. **Idempotency key caching**: Prevents duplicate processing of API requests by caching idempotency keys for 5 minutes
+   - **SQLite:** Used as a lightweight file-based database for CI/CD (GitHub Actions) testing to ensure isolated and repeatable test cases
+- **Storage**  
+   - **AWS S3:** Uploads images to AWS S3
+- **External API**   
+   - **Google Maps API**: Supports geocoding (address-to-coordinates) and route visualization
+   - **OpenAI API**: Supports an AI-based trip assistant that provides destination suggestions
 <div>
-<img width="90%" alt="System Architecture" src="/public/images/system architecture.svg"/>
+<img width="90%" alt="System Architecture" src="/public/images/system-architecture-v2.svg"/>
 </div>
 
 ## Features
@@ -31,6 +42,10 @@
 * Search users by share ID
 * Add users as co-editors
 * Remove users from co-editors
+
+### AI smart assistant
+* Chat with an AI assistant to get travel suggestions
+* Conversation history will be stored in Redis for 1 hour to enable context-aware replies
 
 ### Itinerary
 * Overview personal and shared trips
@@ -60,16 +75,21 @@
    * Allow users to toggle Google Maps visibility
 <video src="https://github.com/user-attachments/assets/b372df7b-8b77-4312-b983-0b445476c8f2" controls width="700"></video>
 
-### 4. Co-editing
+### 4. Chat with AI smart assistant
+   * Interact with an AI travel assistant powered by the OpenAI API to receive personalized travel suggestions
+   * Conversation history will be temporarily stored in Redis (1 hour) to enable context-aware replies while optimizing API token usage
+<video src="https://github.com/user-attachments/assets/54e200d8-3941-4ad8-a7a3-aa737121b172" controls width="700"></video>
+
+### 5. Co-editing
    * Add, remove, and search for co-editors
 <video src="https://github.com/user-attachments/assets/2ce065ce-6f11-436e-a650-05fc3a11f199" controls width="700"></video>
 
-### 5. Concurrency control
+### 6. Concurrency control
    * Implement optimistic locking to prevent data conflicts
    * Display an error message when a concurrency conflict occurs
 <video src="https://github.com/user-attachments/assets/eb4f6653-12f0-4f78-b5cf-4fc80ef4b4fb" controls width="700"></video>
 
-### 6. Commenting feature
+### 7. Commenting feature
    * Enable users to discuss and share feedback on destinations
 <video src="https://github.com/user-attachments/assets/937db808-6137-42ed-9514-a7295c77d168" controls width="700"></video>
 
@@ -102,6 +122,7 @@ docker-compose exec app npx sequelize db:seed:all
 ## Installation
 ### Prerequisites
 - Ensure you have **Node.js (v18.15.0)** and **npm** installed.
+- Ensure you have **Redis** installed and running. 
 
 ### Steps
 1. Clone the repository
@@ -133,8 +154,12 @@ npx sequelize db:migrate
 ```
 npx sequelize db:seed:all
 ```
-8. Start the development server
+8. Make sure Redis server is running
+```
+redis-server
+```
+9. Start the development server
 ```
 npm run dev
 ```
-9. Access the application at http://localhost:3000
+10. Access the application at http://localhost:3000
