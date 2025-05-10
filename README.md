@@ -37,6 +37,13 @@ It integrates Google Maps for `intuitive route visualization` and OpenAI as a `s
 <img width="90%" alt="System Architecture" src="/public/images/system-architecture-v2.svg"/>
 </div>
 
+## Database Schema
+<div>
+<img width="90%" alt="Database schema" src="/public/images/database-schema.svg"/>
+</div>
+
+📌 Given the relatively low frequency of data conflicts during editing, the project adopts an optimistic locking strategy. The `Destinations.updated_at` field is used as a version control indicator to ensure data consistency and prevent overwriting others' changes during collaborative editing.
+
 ## Features
 ### Co-editing
 * Search users by share ID
